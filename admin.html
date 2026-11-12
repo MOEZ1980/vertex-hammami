@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100d0a">
+<title>VERTEX by HAMMAMI | Gestione prenotazioni</title>
+<style>
+:root{color-scheme:dark;--bg:#0d0b09;--panel:#1b1712;--line:#69502f;--gold:#e6c486;--gold2:#f8dfa6;--text:#f8f3eb;--muted:#c9bda8;--green:#a3dfae;--red:#ffb2a9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#292015 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header{border-bottom:1px solid var(--line);padding:20px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
+h1{font:700 clamp(24px,4vw,34px) Georgia,serif;color:var(--gold);margin:0}h1 span{font-size:.65em;color:var(--text)}h2{margin:0 0 5px;color:var(--gold);font-size:22px}small,.muted{color:var(--muted)}main{max-width:1120px;margin:30px auto;padding:0 18px 70px}.panel{border:1px solid var(--line);background:var(--panel);padding:22px;border-radius:12px;margin-bottom:18px;box-shadow:0 12px 30px #0002}
+#login{max-width:500px;margin:48px auto}label{display:block;margin:15px 0 6px;font-weight:600}input,select{background:#100e0b;border:1px solid #7a6341;border-radius:7px;color:var(--text);padding:12px 13px;font:inherit;width:100%}
+button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius:7px;padding:12px 16px;cursor:pointer;color:#20180e;background:linear-gradient(120deg,#ffe4a9,#bd8f4c)}button:hover:not(:disabled){filter:brightness(1.08)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#201b14;color:var(--gold)}button.danger{background:#512d2a;border-color:#a36c64;color:#fff}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.toolbar-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.toolbar select{width:auto;min-width:155px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.stat{background:#211b14;border:1px solid #58442b;padding:9px 13px;border-radius:9px;color:var(--muted)}.stat strong{color:var(--gold2);margin-right:5px}
+.notice{border:1px solid #947747;border-left:5px solid var(--gold);border-radius:9px;padding:13px 16px;background:#292216;color:var(--gold2);margin-bottom:18px;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{border-color:#b85e58;border-left-color:#e77e74;color:#ffd1c9;background:#3a211f}.notice.success{border-color:#618c67;border-left-color:#8ed29a;color:#d2f5d8;background:#1c3021}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}.booking{border:1px solid #57442e;background:#1b1712;border-radius:11px;padding:19px;display:flex;flex-direction:column;gap:7px;min-width:0}.booking strong{font-size:19px;color:var(--gold2);overflow-wrap:anywhere}.booking p{margin:0;overflow-wrap:anywhere}.status{font-weight:750}.status.pending{color:#f5cf70}.status.confirmed{color:var(--green)}.status.rejected,.status.cancelled{color:var(--red)}.status.blocked{color:#c4b8f3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}.actions button{flex:1 0 auto}.booking a{color:var(--gold)}.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted)}.footnote{font-size:13px;color:var(--muted);margin-top:18px}
+[hidden]{display:none!important}@media(max-width:560px){header{padding:17px}main{margin:20px auto}.panel{padding:17px}.toolbar-controls{width:100%}.toolbar-controls select{flex:1}.toolbar-controls button{flex:1}}
+
+/* Gestione orari e modifica appuntamenti */
+.schedule-grid,.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
+.schedule-grid .full,.edit-grid .full{grid-column:1/-1}
+.schedule-grid label,.edit-grid label{margin-top:8px}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.form-actions button{flex:1 1 170px}
+.hint{font-size:13px;color:var(--muted);margin:7px 0}
+.dialog-shell{background:#1b1712;border:1px solid var(--gold);color:var(--text);border-radius:13px;width:min(94vw,600px);max-height:90dvh;overflow-y:auto;padding:23px;box-shadow:0 18px 80px #000b}
+.dialog-shell::backdrop{background:#000b}
+#schedulePanel h3{margin:0 0 8px;color:var(--gold2)}
+@media(max-width:560px){.schedule-grid,.edit-grid{grid-template-columns:1fr}.schedule-grid .full,.edit-grid .full{grid-column:1}.dialog-shell{padding:17px}}
+</style>
+</head>
+<body>
+<header><div><h1>VERTEX <span>by HAMMAMI</span></h1><small>Area riservata · Gestione appuntamenti</small></div><button id="logout" class="secondary" hidden>Esci</button></header>
+<main>
+<section id="login" class="panel"><h2>Accesso amministratore</h2><p class="muted">Accedi con il tuo account autorizzato.</p><form id="loginForm"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><p><button id="loginBtn" type="submit">ACCEDI</button></p></form></section>
+<section id="dashboard" hidden>
+ <div class="panel toolbar"><div><h2>Prenotazioni</h2><small>Le richieste vengono confermate solo dal titolare.</small></div><div class="toolbar-controls"><select id="filter" aria-label="Filtra prenotazioni"><option value="all">Tutte</option><option value="pending">In attesa</option><option value="confirmed">Confermate</option><option value="rejected">Rifiutate</option><option value="cancelled">Annullate</option><option value="blocked">Orari bloccati</option></select><button id="toggleSchedule" class="secondary" type="button" aria-expanded="false" aria-controls="schedulePanel">🕒 Gestione orari</button><button id="refresh" class="secondary" type="button">↻ Aggiorna</button></div></div>
+ <section id="schedulePanel" class="panel" hidden aria-label="Gestione orari">
+  <h3>Blocca un orario</h3>
+  <p class="muted">Riserva una pausa, un cliente senza prenotazione o un giorno di chiusura. Il blocco impedisce nuove richieste sovrapposte quando il sito usa Supabase.</p>
+  <form id="blockForm">
+   <div class="schedule-grid">
+    <div><label for="blockDate">Giorno</label><input id="blockDate" type="date" required></div>
+    <div><label for="blockReason">Motivo</label><input id="blockReason" maxlength="100" value="Pausa" required></div>
+    <div><label for="blockStart">Dalle ore</label><input id="blockStart" type="time" value="13:00" step="300" required></div>
+    <div><label for="blockEnd">Alle ore</label><input id="blockEnd" type="time" value="13:30" step="300" required></div>
+   </div>
+   <div class="form-actions"><button type="submit">🔒 Blocca orario</button><button id="blockDay" type="button" class="secondary">Blocca tutta la giornata</button></div>
+   <p class="hint">Per sbloccare, scegli “Orari bloccati” nel filtro e premi “Sblocca” sulla scheda. I blocchi esistenti non vengono cancellati automaticamente.</p>
+  </form>
+ </section>
+ <div id="stats" class="stats" aria-live="polite"></div>
+ <div id="dashboardMessage" class="notice" role="status" aria-live="polite">Premi Aggiorna per ricaricare le prenotazioni.</div>
+ <div id="cards" class="cards"></div>
+ <p class="footnote" id="lastRefresh">Nessun aggiornamento effettuato.</p>
+</section>
+<div id="loginMessage" class="notice" role="status" aria-live="polite" hidden></div>
+</main>
+<dialog id="editDialog" class="dialog-shell" aria-labelledby="editTitle">
+ <h2 id="editTitle">Modifica prenotazione</h2>
+ <p class="hint">La conferma del titolare resta invariata. Un orario occupato non può essere sovrapposto.</p>
+ <form id="editForm">
+  <div class="edit-grid">
+   <div class="full"><label for="editName">Nome cliente</label><input id="editName" maxlength="120" required></div>
+   <div class="full"><label for="editPhone">Telefono</label><input id="editPhone" type="tel" maxlength="30" required></div>
+   <div class="full"><label for="editService">Servizio</label><input id="editService" maxlength="120" required></div>
+   <div><label for="editPrice">Prezzo (€)</label><input id="editPrice" type="number" min="0" max="1000" step="0.01" required></div>
+   <div><label for="editDuration">Durata (minuti)</label><input id="editDuration" type="number" min="5" max="240" step="1" required></div>
+   <div><label for="editDate">Giorno</label><input id="editDate" type="date" required></div>
+   <div><label for="editTime">Ora</label><input id="editTime" type="time" step="60" required></div>
+  </div>
+  <div class="form-actions"><button type="submit">💾 Salva modifica</button><button type="button" class="secondary" id="cancelEdit">Annulla</button></div>
+ </form>
+</dialog>
+<script>
+'use strict';
+// Impostazioni riprese ESATTAMENTE dal file admin.html fornito dall'utente.
+// Non inserire mai una chiave service_role in questo file.
+const SUPABASE_URL='https://xdyrujptrggyhltljmlm.supabase.co';
+const SUPABASE_KEY='sb_publishable_PJLP34HkqWKZbwhsN65KKA_12wdK7V8';
+const $=id=>document.getElementById(id);
+let accessToken='',bookings=[],loading=false;
+const statusLabels={pending:'In attesa',confirmed:'Confermato',rejected:'Rifiutato',cancelled:'Annullato',blocked:'Orario bloccato'};
+function showNotice(text,type='info'){
+ const el=accessToken?$('dashboardMessage'):$('loginMessage');
+ el.hidden=false;el.textContent=text;el.className='notice'+(type==='error'?' error':type==='success'?' success':'');
+}
+function showDashboard(yes){$('login').hidden=yes;$('dashboard').hidden=!yes;$('logout').hidden=!yes;$('loginMessage').hidden=yes}
+async function api(path,body,token=''){
+ let response;
+ try{response=await fetch(SUPABASE_URL+path,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,...(token?{'Authorization':'Bearer '+token}:{})},body:JSON.stringify(body)})}
+ catch(e){throw new Error('Impossibile contattare Supabase. Verifica Internet, URL del progetto e console Network. '+e.message)}
+ const raw=await response.text();let data={};try{data=raw?JSON.parse(raw):{}}catch{data={error:raw.slice(0,400)}}
+ if(!response.ok){const detail=data.error_description||data.msg||data.error||data.message||'Richiesta non riuscita';throw new Error('HTTP '+response.status+' — '+String(detail))}
+ return data;
+}
+function dateRome(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'Data non valida':d.toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'full',timeStyle:'short'})}
+function line(card,label,value){const p=document.createElement('p');const strong=document.createElement('b');strong.textContent=label+': ';p.append(strong,document.createTextNode(String(value??'—')));card.append(p)}
+function render(){
+ const cards=$('cards');cards.replaceChildren();
+ const f=$('filter').value,visible=bookings.filter(b=>f==='all'||b.status===f);
+ $('stats').replaceChildren();
+ for(const [label,count] of [['Totale',bookings.length],['In attesa',bookings.filter(b=>b.status==='pending').length],['Confermate',bookings.filter(b=>b.status==='confirmed').length],['Bloccati',bookings.filter(b=>b.status==='blocked').length]]){
+  const span=document.createElement('span');span.className='stat';const bold=document.createElement('strong');bold.textContent=String(count);span.append(bold,document.createTextNode(label));$('stats').append(span);
+ }
+ if(!visible.length){const p=document.createElement('div');p.className='empty';p.textContent='Nessuna prenotazione per questo filtro.';cards.append(p);return}
+ for(const b of visible){
+  const card=document.createElement('article');card.className='booking';
+  const isBlock=b.status==='blocked'||b.customer_name==='BLOCCATO'||b.customer_phone==='ADMIN';
+  const name=document.createElement('strong');name.textContent=isBlock?(b.status==='blocked'?'🔒 Blocco orario':'🔓 Blocco sbloccato'):(b.customer_name||'Cliente');card.append(name);
+  line(card,'Data',dateRome(b.starts_at));
+  if(b.ends_at)line(card,'Fine',dateRome(b.ends_at));
+  line(card,'Servizio',b.service_name||'—');
+  if(!isBlock)line(card,'Prezzo',b.price!=null?b.price+' €':'—');
+  if(!isBlock)line(card,'Telefono',b.customer_phone||'—');
+  const st=document.createElement('p');st.className='status '+(isBlock&&b.status==='cancelled'?'confirmed':(b.status||''));st.textContent='Stato: '+(isBlock&&b.status==='cancelled'?'Sbloccato':(statusLabels[b.status]||b.status||'—'));card.append(st);
+  if(!isBlock&&b.customer_phone){const phone=String(b.customer_phone).replace(/[^+\d]/g,'');if(phone){const a=document.createElement('a');a.href='tel:'+phone;a.textContent='Chiama il cliente';card.append(a)}}
+  const actions=document.createElement('div');actions.className='actions';
+  if(b.status==='pending'||b.status==='confirmed'){
+   const edit=document.createElement('button');edit.type='button';edit.className='secondary';edit.textContent='✎ Modifica';edit.disabled=loading;edit.onclick=()=>openEdit(b);actions.append(edit);
+  }
+  if(b.status==='blocked'){
+   const unblock=document.createElement('button');unblock.type='button';unblock.className='secondary';unblock.textContent='🔓 Sblocca';unblock.disabled=loading;unblock.onclick=()=>unblockTime(b);actions.append(unblock);
+  }
+  let choices=[];
+  if(b.status==='pending')choices=[['confirmed','Conferma',''],['rejected','Rifiuta','danger'],['cancelled','Annulla','secondary']];
+  if(b.status==='confirmed')choices=[['cancelled','Annulla','secondary']];
+  for(const [status,label,cls] of choices){const btn=document.createElement('button');btn.type='button';btn.className=cls;btn.textContent=label;btn.disabled=loading;btn.onclick=()=>changeStatus(b,status);actions.append(btn)}
+  card.append(actions);cards.append(card);
+ }
+}
+async function load(){
+ if(loading)return;loading=true;const btn=$('refresh');btn.disabled=true;btn.textContent='Caricamento…';showNotice('Aggiornamento in corso…');
+ try{
+  const d=await api('/functions/v1/admin-bookings',{action:'list'},accessToken);
+  if(!Array.isArray(d)&&!Array.isArray(d.bookings)&&!Array.isArray(d.data))throw new Error('Formato inatteso della risposta: manca bookings.');
+  bookings=Array.isArray(d)?d:Array.isArray(d.bookings)?d.bookings:d.data;
+  $('lastRefresh').textContent='Ultimo aggiornamento: '+new Date().toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'short',timeStyle:'medium'});
+  showNotice('✓ Aggiornamento completato. Prenotazioni caricate: '+bookings.length,'success');
+ }catch(e){showNotice('Errore durante Aggiorna: '+e.message,'error');console.error('VERTEX caricamento prenotazioni:',e)}
+ finally{loading=false;btn.disabled=false;btn.textContent='↻ Aggiorna';render()}
+}
+async function changeStatus(b,status){
+ const label=statusLabels[status]||status;
+ if(!window.confirm('Confermi di cambiare lo stato di «'+(b.customer_name||'Cliente')+'» in «'+label+'»?'))return;
+ if(loading)return;loading=true;showNotice('Salvataggio modifica in corso…');
+ try{
+  const result=await api('/functions/v1/admin-bookings',{action:'update',id:b.id,status},accessToken);
+  console.info('VERTEX aggiornamento riuscito:',result);
+  loading=false;await load();
+  showNotice('✓ Stato aggiornato a «'+label+'». Elenco ricaricato.','success');
+ }catch(e){showNotice('Modifica NON salvata: '+e.message,'error');window.alert('Impossibile modificare la prenotazione.\n\n'+e.message);console.error('VERTEX aggiornamento:',e)}
+ finally{loading=false;render()}
+}
+// L'API di modifica e blocco è separata: la funzione admin-bookings già funzionante resta intatta.
+const SCHEDULE_API='/functions/v1/admin-schedule';
+let editingId='';
+const romeFormat=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+function romeParts(value){
+ const obj={};for(const part of romeFormat.formatToParts(new Date(value))){if(part.type!=='literal')obj[part.type]=part.value}
+ return {day:obj.year+'-'+obj.month+'-'+obj.day,time:obj.hour+':'+obj.minute};
+}
+function romeToISO(day,time){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))throw new Error('Giorno o ora non valido.');
+ const [y,m,d]=day.split('-').map(Number),[h,min]=time.split(':').map(Number);
+ const wall=Date.UTC(y,m-1,d,h,min);
+ const options=[wall-3600000,wall-7200000].filter(ms=>{
+  const p=romeParts(ms);return p.day===day&&p.time===time;
+ });
+ if(!options.length)throw new Error('Orario non esistente in Italia (cambio ora legale).');
+ return new Date(Math.min(...options)).toISOString();
+}
+function durationMinutes(b){
+ const minutes=Math.round((new Date(b.ends_at)-new Date(b.starts_at))/60000);
+ return Number.isFinite(minutes)&&minutes>=5&&minutes<=240?minutes:15;
+}
+function openEdit(b){
+ if(loading)return;
+ editingId=b.id;
+ const p=romeParts(b.starts_at);
+ $('editName').value=b.customer_name||'';
+ $('editPhone').value=b.customer_phone||'';
+ $('editService').value=b.service_name||'';
+ $('editPrice').value=b.price??0;
+ $('editDuration').value=durationMinutes(b);
+ $('editDate').value=p.day;$('editTime').value=p.time;
+ $('editDialog').showModal();
+}
+async function scheduleAction(payload,successText){
+ if(loading)return false;
+ loading=true;
+ showNotice('Salvataggio in corso…');
+ try{
+  await api(SCHEDULE_API,payload,accessToken);
+  loading=false;
+  await load();
+  showNotice('✓ '+successText,'success');
+  return true;
+ }catch(e){
+  const hint=String(e.message).includes('HTTP 404')?' Verifica che la Edge Function admin-schedule sia stata pubblicata.':'';
+  showNotice('Operazione NON salvata: '+e.message+hint,'error');
+  window.alert('Operazione non riuscita.\n'+e.message+hint);
+  return false;
+ }finally{loading=false;render()}
+}
+$('toggleSchedule').onclick=()=>{
+ const panel=$('schedulePanel');panel.hidden=!panel.hidden;
+ $('toggleSchedule').setAttribute('aria-expanded',String(!panel.hidden));
+ if(!panel.hidden&&!$('blockDate').value)$('blockDate').value=romeParts(Date.now()).day;
+};
+$('blockForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ try{
+  const day=$('blockDate').value,start=$('blockStart').value,end=$('blockEnd').value;
+  if(end<=start)throw new Error('L’ora finale deve essere successiva a quella iniziale.');
+  const starts_at=romeToISO(day,start),ends_at=romeToISO(day,end);
+  if(!window.confirm('Bloccare '+day+' dalle '+start+' alle '+end+'?'))return;
+  await scheduleAction({action:'block',starts_at,ends_at,reason:$('blockReason').value.trim()},'Orario bloccato.');
+ }catch(err){showNotice(err.message,'error')}
+});
+$('blockDay').onclick=async()=>{
+ try{
+  const day=$('blockDate').value;
+  const starts_at=romeToISO(day,'00:00'),ends_at=romeToISO(day,'23:59');
+  if(!window.confirm('Bloccare TUTTA la giornata del '+day+'?'))return;
+  await scheduleAction({action:'block',starts_at,ends_at,reason:'Chiusura giornaliera'},'Giornata bloccata.');
+ }catch(err){showNotice(err.message,'error')}
+};
+async function unblockTime(b){
+ if(!window.confirm('Sbloccare l’orario del '+dateRome(b.starts_at)+'?'))return;
+ await scheduleAction({action:'unblock',id:b.id},'Orario sbloccato.');
+}
+$('editForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ try{
+  const starts_at=romeToISO($('editDate').value,$('editTime').value);
+  const minutes=Number($('editDuration').value);
+  if(!Number.isInteger(minutes)||minutes<5||minutes>240)throw new Error('Durata: da 5 a 240 minuti.');
+  const ends_at=new Date(new Date(starts_at).getTime()+minutes*60000).toISOString();
+  if(!window.confirm('Salvare le modifiche a questa prenotazione?'))return;
+  const ok=await scheduleAction({action:'edit',id:editingId,
+   customer_name:$('editName').value.trim(),customer_phone:$('editPhone').value.trim(),
+   service_name:$('editService').value.trim(),price:Number($('editPrice').value),
+   starts_at,ends_at},'Prenotazione modificata.');
+  if(ok)$('editDialog').close();
+ }catch(err){showNotice(err.message,'error')}
+});
+$('cancelEdit').onclick=()=>$('editDialog').close();
+
+$('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=$('loginBtn');btn.disabled=true;showNotice('Accesso in corso…');
+ try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});if(!d.access_token)throw new Error('Token di accesso mancante');accessToken=d.access_token;$('password').value='';showDashboard(true);await load()}
+ catch(err){showNotice('Accesso non riuscito: '+err.message,'error');console.error('VERTEX accesso:',err)}
+ finally{btn.disabled=false}
+});
+$('logout').onclick=()=>{if($('editDialog').open)$('editDialog').close();$('schedulePanel').hidden=true;accessToken='';bookings=[];showDashboard(false);$('loginMessage').hidden=false;showNotice('Sessione chiusa.','success')};
+$('refresh').onclick=()=>load();$('filter').onchange=render;
+</script>
+</body>
+</html>
