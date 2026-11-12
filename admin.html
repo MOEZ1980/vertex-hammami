@@ -99,7 +99,27 @@ function dateRome(value){if(!value)return '—';const d=new Date(value);return N
 function line(card,label,value){const p=document.createElement('p');const strong=document.createElement('b');strong.textContent=label+': ';p.append(strong,document.createTextNode(String(value??'—')));card.append(p)}
 function render(){
  const cards=$('cards');cards.replaceChildren();
- const f=$('filter').value,visible=bookings.filter(b=>f==='all'||b.status===f);
+ const f = $('filter').value;
+
+const today = new Date().toLocaleDateString('sv-SE', {
+  timeZone: 'Europe/Rome'
+});
+
+const visible = bookings.filter(b => {
+  const status = String(b.status || '').toLowerCase();
+
+  if (['cancelled', 'rejected', 'unblocked'].includes(status)) {
+    return false;
+  }
+
+  const bookingDay = new Date(b.starts_at).toLocaleDateString('sv-SE', {
+    timeZone: 'Europe/Rome'
+  });
+
+  if (bookingDay < today) return false;
+
+  return f === 'all' || status === f;
+});
  $('stats').replaceChildren();
  for(const [label,count] of [['Totale',bookings.length],['In attesa',bookings.filter(b=>b.status==='pending').length],['Confermate',bookings.filter(b=>b.status==='confirmed').length],['Bloccati',bookings.filter(b=>b.status==='blocked').length]]){
   const span=document.createElement('span');span.className='stat';const bold=document.createElement('strong');bold.textContent=String(count);span.append(bold,document.createTextNode(label));$('stats').append(span);
