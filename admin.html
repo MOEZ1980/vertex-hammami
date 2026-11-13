@@ -342,5 +342,31 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+<button id="enableNotifications" type="button">
+  🔔 Attiva notifiche
+</button>
+
+<script>
+document.getElementById('enableNotifications')
+  .addEventListener('click', async () => {
+    if (!('Notification' in window)) {
+      alert('Notifiche non supportate.');
+      return;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+
+      if (permission === 'granted') {
+        alert('Notifiche autorizzate!');
+      } else {
+        alert('Notifiche non autorizzate.');
+      }
+    } catch (error) {
+      alert('Errore: ' + error.message);
+    }
+  });
+</script>
+
 </body>
 </html>
