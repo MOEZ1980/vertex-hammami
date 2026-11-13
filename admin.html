@@ -37,6 +37,14 @@ button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius
 <main>
 <section id="login" class="panel"><h2>Accesso amministratore</h2><p class="muted">Accedi con il tuo account autorizzato.</p><form id="loginForm"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><p><button id="loginBtn" type="submit">ACCEDI</button></p></form></section>
 <section id="dashboard" hidden>
+
+<section class="panel" id="barbersPanel">
+  <h2>Gestione barbieri</h2>
+  <p class="muted">Attiva o disattiva i barbieri.</p>
+  <div id="barbersList">Caricamento barbieri...</div>
+</section>
+
+ 
  <div class="panel toolbar"><div><h2>Prenotazioni</h2><small>Le richieste vengono confermate solo dal titolare.</small></div><div class="toolbar-controls"><select id="filter" aria-label="Filtra prenotazioni"><option value="all">Tutte</option><option value="pending">In attesa</option><option value="confirmed">Confermate</option><option value="rejected">Rifiutate</option><option value="cancelled">Annullate</option><option value="blocked">Orari bloccati</option></select><button id="toggleSchedule" class="secondary" type="button" aria-expanded="false" aria-controls="schedulePanel">🕒 Gestione orari</button><button id="refresh" class="secondary" type="button">↻ Aggiorna</button></div></div>
  <section id="schedulePanel" class="panel" hidden aria-label="Gestione orari">
   <h3>Blocca un orario</h3>
@@ -83,7 +91,48 @@ const SUPABASE_URL='https://xdyrujptrggyhltljmlm.supabase.co';
 const SUPABASE_KEY='sb_publishable_PJLP34HkqWKZbwhsN65KKA_12wdK7V8';
 const $=id=>document.getElementById(id);
 let accessToken='',bookings=[],loading=false;
-const statusLabels={pending:'In attesa',confirmed:'Confermato',rejected:'Rifiutato',cancelled:'Annullato',blocked:'Orario bloccato'};
+ const statusLabels={pending:'In attesa',confirmed:'Confermato',rejected:'Rifiutato',cancelled:'Annullato',blocked:'Orario bloccato'};
+
+let barbers = [];
+
+async function loadBarbers() {
+  const result = await api("/functions/v1/admin-bookings", {
+    action: "barbers_list"
+  }, accessToken);
+
+  barbers = result.barbers || [];
+  const container = $("barbersList");
+  container.replaceChildren();
+
+  for (const barber of barbers) {
+    const row = document.createElement("div");
+    row.className = "toolbar";
+
+    const name = document.createElement("strong");
+    name.textContent = barber.name;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = barber.is_active ? "Disattiva" : "Attiva";
+    button.onclick = async () => {
+      try {
+        button.disabled = true;
+        await api("/functions/v1/admin-bookings", {
+          action: "barber_toggle",
+          barber_id: barber.id,
+          is_active: !barber.is_active
+        }, accessToken);
+        await loadBarbers();
+      } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+      }
+    };
+
+    row.append(name, button);
+    container.append(row);
+  }
+}
 function showNotice(text,type='info'){
  const el=accessToken?$('dashboardMessage'):$('loginMessage');
  el.hidden=false;el.textContent=text;el.className='notice'+(type==='error'?' error':type==='success'?' success':'');
@@ -272,7 +321,7 @@ $('cancelEdit').onclick=()=>$('editDialog').close();
 
 $('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=$('loginBtn');btn.disabled=true;showNotice('Accesso in corso…');
- try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});if(!d.access_token)throw new Error('Token di accesso mancante');accessToken=d.access_token;$('password').value='';showDashboard(true);await load()}
+ try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});if(!d.access_token)throw new Error('Token di accesso mancante');accessToken=d.access_token;$('password').value='';showDashboard(true);await loadBarbers();await load()}
  catch(err){showNotice('Accesso non riuscito: '+err.message,'error');console.error('VERTEX accesso:',err)}
  finally{btn.disabled=false}
 });
