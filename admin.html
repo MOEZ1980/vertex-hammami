@@ -432,5 +432,41 @@ document.getElementById("enableNotifications")
   });
 </script>
 
+<button id="testPushNotification" type="button"
+  style="margin:16px;padding:14px;">
+  🔔 Invia notifica di prova
+</button>
+
+<script>
+document.getElementById("testPushNotification")
+  .addEventListener("click", async () => {
+    if (!accessToken) {
+      alert("Accedi come amministratore.");
+      return;
+    }
+
+    const button = document.getElementById("testPushNotification");
+    button.disabled = true;
+
+    try {
+      const result = await api(
+        "/functions/v1/vertex-push-send",
+        { action: "test" },
+        accessToken
+      );
+
+      alert(
+        "Risultato test Push:\n" +
+        "Inviati: " + result.sent + "\n" +
+        "Falliti: " + result.failed
+      );
+    } catch (error) {
+      alert("Errore test Push: " + error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+</script>
+
 </body>
 </html>
