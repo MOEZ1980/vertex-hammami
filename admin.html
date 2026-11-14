@@ -1,3 +1,4 @@
+
 ```
 <!doctype html>
 <html lang="it">
@@ -5,7 +6,7 @@
  <link rel="icon" type="image/jpeg" href="logo.jpg">
 <link rel="apple-touch-icon" href="logo.jpg">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1"
 <meta name="theme-color" content="#100d0a">
 <title>VERTEX by HAMMAMI | Gestione prenotazioni</title>
 <style>
@@ -229,7 +230,7 @@ function vertexWhatsAppConfirmationUrl(b){
  const phone=vertexWhatsAppNumber(b.customer_phone);
  if(!phone)return '';
  const location='Via Terraglio 111, Frescada, Preganziol, Italia';
- const maps='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(location);
+const maps='https://www.google.com/maps/place/VERTEX+by+HAMMAMI/@45.6372681,12.2381734,17z/data=!3m1!4b1!4m6!3m5!1s0x477949990abaa3e3:0xa30e556fa6f9166c!8m2!3d45.6372644!4d12.2407483!16s%2Fg%2F11nvhjrdyr';
  const message=[
   'Ciao '+(b.customer_name||'')+',',
   '',
