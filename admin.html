@@ -1,3 +1,5 @@
+````
+
 
 ```
 <!doctype html>
@@ -6,7 +8,7 @@
  <link rel="icon" type="image/jpeg" href="logo.jpg">
 <link rel="apple-touch-icon" href="logo.jpg">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#100d0a">
 <title>VERTEX by HAMMAMI | Gestione prenotazioni</title>
 <style>
@@ -93,6 +95,62 @@ const SUPABASE_URL='https://xdyrujptrggyhltljmlm.supabase.co';
 const SUPABASE_KEY='sb_publishable_PJLP34HkqWKZbwhsN65KKA_12wdK7V8';
 const $=id=>document.getElementById(id);
 let accessToken='',bookings=[],loading=false;
+// Sessione Supabase: persiste nell'app installata; NON memorizzare mai la password.
+const VERTEX_SESSION_KEY='vertex_hammami_admin_session_v1';
+let vertexSession=null,vertexRefreshPromise=null;
+function vertexSaveSession(data){
+ if(!data||!data.access_token||!data.refresh_token)throw new Error('Sessione Supabase incompleta.');
+ vertexSession={access_token:data.access_token,refresh_token:data.refresh_token,
+  expires_at:Date.now()+Math.max(0,Number(data.expires_in||3600))*1000};
+ localStorage.setItem(VERTEX_SESSION_KEY,JSON.stringify(vertexSession));
+ accessToken=vertexSession.access_token;
+}
+function vertexClearSession(){
+ vertexSession=null;accessToken='';localStorage.removeItem(VERTEX_SESSION_KEY);
+}
+function vertexReadSession(){
+ try{
+  const data=JSON.parse(localStorage.getItem(VERTEX_SESSION_KEY)||'null');
+  if(data&&typeof data.refresh_token==='string'&&typeof data.access_token==='string'){
+   vertexSession=data;accessToken=data.access_token;return true;
+  }
+ }catch(error){console.warn('Sessione locale non valida:',error);}
+ vertexClearSession();return false;
+}
+async function vertexRefreshSession(force=false){
+ if(!vertexSession?.refresh_token)throw new Error('Sessione assente. Accedi di nuovo.');
+ if(!force&&vertexSession.expires_at>Date.now()+90000)return accessToken;
+ if(vertexRefreshPromise)return vertexRefreshPromise;
+ vertexRefreshPromise=(async()=>{
+  let response;
+  try{response=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{
+   method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+   body:JSON.stringify({refresh_token:vertexSession.refresh_token})
+  });}catch(error){throw new Error('Connessione assente: '+error.message);}
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok){
+   if(response.status===400||response.status===401||response.status===403)vertexClearSession();
+   throw new Error(result.error_description||result.msg||result.message||'Rinnovo sessione non riuscito');
+  }
+  vertexSaveSession(result);return accessToken;
+ })();
+ try{return await vertexRefreshPromise;}finally{vertexRefreshPromise=null;}
+}
+async function vertexRestoreSession(){
+ if(!vertexReadSession())return;
+ $('loginMessage').hidden=false;
+ $('loginMessage').textContent='Ripristino sessione in corso…';
+ try{
+  await vertexRefreshSession(true);
+  showDashboard(true);
+  await Promise.all([loadBarbers(),load()]);
+ }catch(error){
+  if(!accessToken){showDashboard(false);showNotice('Sessione scaduta. Accedi nuovamente.','error');}
+  else{showDashboard(true);showNotice('Connessione non disponibile. Premi Aggiorna quando torna Internet.','error');}
+  console.warn('Ripristino accesso VERTEX:',error);
+ }
+}
+
  const statusLabels={pending:'In attesa',confirmed:'Confermato',rejected:'Rifiutato',cancelled:'Annullato',blocked:'Orario bloccato'};
 
 let barbers = [];
@@ -141,9 +199,17 @@ function showNotice(text,type='info'){
 }
 function showDashboard(yes){$('login').hidden=yes;$('dashboard').hidden=!yes;$('logout').hidden=!yes;$('loginMessage').hidden=yes}
 async function api(path,body,token=''){
- let response;
- try{response=await fetch(SUPABASE_URL+path,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,...(token?{'Authorization':'Bearer '+token}:{})},body:JSON.stringify(body)})}
- catch(e){throw new Error('Impossibile contattare Supabase. Verifica Internet, URL del progetto e console Network. '+e.message)}
+ const protectedCall=!!token&&!path.startsWith('/auth/v1/token');
+ if(protectedCall&&vertexSession)await vertexRefreshSession();
+ const request=async()=>{
+  try{return await fetch(SUPABASE_URL+path,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,
+   ...(token?{'Authorization':'Bearer '+(vertexSession?accessToken:token)}:{})},body:JSON.stringify(body)})}
+  catch(e){throw new Error('Impossibile contattare Supabase. Verifica Internet e connessione. '+e.message)}
+ };
+ let response=await request();
+ if(response.status===401&&protectedCall&&vertexSession){
+  await vertexRefreshSession(true);response=await request();
+ }
  const raw=await response.text();let data={};try{data=raw?JSON.parse(raw):{}}catch{data={error:raw.slice(0,400)}}
  if(!response.ok){const detail=data.error_description||data.msg||data.error||data.message||'Richiesta non riuscita';throw new Error('HTTP '+response.status+' — '+String(detail))}
  return data;
@@ -394,12 +460,26 @@ $('cancelEdit').onclick=()=>$('editDialog').close();
 
 $('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=$('loginBtn');btn.disabled=true;showNotice('Accesso in corso…');
- try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});if(!d.access_token)throw new Error('Token di accesso mancante');accessToken=d.access_token;$('password').value='';showDashboard(true);await loadBarbers();await load()}
+ try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});vertexSaveSession(d);$('password').value='';showDashboard(true);await Promise.all([loadBarbers(),load()])}
  catch(err){showNotice('Accesso non riuscito: '+err.message,'error');console.error('VERTEX accesso:',err)}
  finally{btn.disabled=false}
 });
-$('logout').onclick=()=>{if($('editDialog').open)$('editDialog').close();$('schedulePanel').hidden=true;accessToken='';bookings=[];showDashboard(false);$('loginMessage').hidden=false;showNotice('Sessione chiusa.','success')};
+$('logout').onclick=async()=>{
+ const oldToken=accessToken;
+ if($('editDialog').open)$('editDialog').close();
+ $('schedulePanel').hidden=true;vertexClearSession();bookings=[];showDashboard(false);
+ showNotice('Sessione chiusa.','success');
+ if(oldToken){
+  try{await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+oldToken}})}
+  catch(error){console.warn('Logout remoto:',error)}
+ }
+};
 $('refresh').onclick=()=>load();$('filter').onchange=render;
+// Riaprendo l'app dalla Home o da un link, rinnova la sessione quando serve.
+window.addEventListener('pageshow',()=>{if(!accessToken)vertexRestoreSession();});
+document.addEventListener('visibilitychange',()=>{
+ if(!document.hidden&&vertexSession)vertexRefreshSession().catch(error=>console.warn('Rinnovo:',error));
+});
 </script>
 
 <script>
@@ -544,3 +624,4 @@ document.getElementById("testPushNotification")
 </body>
 </html>
 ```
+````
