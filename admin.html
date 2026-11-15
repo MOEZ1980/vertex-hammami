@@ -20,7 +20,7 @@ h1{font:700 clamp(24px,4vw,34px) Georgia,serif;color:var(--gold);margin:0}h1 spa
 button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius:7px;padding:12px 16px;cursor:pointer;color:#20180e;background:linear-gradient(120deg,#ffe4a9,#bd8f4c)}button:hover:not(:disabled){filter:brightness(1.08)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#201b14;color:var(--gold)}button.danger{background:#512d2a;border-color:#a36c64;color:#fff}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold)}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.toolbar-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.toolbar select{width:auto;min-width:155px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.stat{background:#211b14;border:1px solid #58442b;padding:9px 13px;border-radius:9px;color:var(--muted)}.stat strong{color:var(--gold2);margin-right:5px}
 .notice{border:1px solid #947747;border-left:5px solid var(--gold);border-radius:9px;padding:13px 16px;background:#292216;color:var(--gold2);margin-bottom:18px;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{border-color:#b85e58;border-left-color:#e77e74;color:#ffd1c9;background:#3a211f}.notice.success{border-color:#618c67;border-left-color:#8ed29a;color:#d2f5d8;background:#1c3021}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}.booking{border:1px solid #57442e;background:#1b1712;border-radius:11px;padding:19px;display:flex;flex-direction:column;gap:7px;min-width:0}.booking strong{font-size:19px;color:var(--gold2);overflow-wrap:anywhere}.booking p{margin:0;overflow-wrap:anywhere}.status{font-weight:750}.status.pending{color:#f5cf70}.status.confirmed{color:var(--green)}.status.rejected,.status.cancelled{color:var(--red)}.status.blocked{color:#c4b8f3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}.actions button{flex:1 0 auto}.booking a{color:var(--gold)}.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted)}.footnote{font-size:13px;color:var(--muted);margin-top:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}.booking{border:1px solid #57442e;background:#1b1712;border-radius:11px;padding:15px;display:flex;flex-direction:column;gap:5px;min-width:0}.booking strong{font-size:18px;color:var(--gold2);overflow-wrap:anywhere}.booking p{margin:0;overflow-wrap:anywhere;font-size:14px;line-height:1.4}.booking--blocked{padding:11px 14px;gap:3px;border-radius:9px;background:#191610}.booking--blocked strong{font-size:16px}.booking--blocked p{font-size:13px;line-height:1.35}.booking--blocked .status{display:inline-flex;width:fit-content;margin-top:3px;padding:3px 9px;border:1px solid #52446f;border-radius:999px;background:#272033;font-size:12px}.status{font-weight:750}.status.pending{color:#f5cf70}.status.confirmed{color:var(--green)}.status.rejected,.status.cancelled{color:var(--red)}.status.blocked{color:#c4b8f3}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:8px}.actions button{flex:1 0 auto}.booking a{color:var(--gold)}.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted)}.footnote{font-size:13px;color:var(--muted);margin-top:18px}
 [hidden]{display:none!important}@media(max-width:560px){header{padding:17px}main{margin:20px auto}.panel{padding:17px}.toolbar-controls{width:100%}.toolbar-controls select{flex:1}.toolbar-controls button{flex:1}}
 
 /* Gestione orari e modifica appuntamenti */
@@ -244,9 +244,11 @@ const visible = bookings.filter(b => {
   const span=document.createElement('span');span.className='stat';const bold=document.createElement('strong');bold.textContent=String(count);span.append(bold,document.createTextNode(label));$('stats').append(span);
  }
  if(!visible.length){const p=document.createElement('div');p.className='empty';p.textContent='Nessuna prenotazione per questo filtro.';cards.append(p);return}
+ // Keep customer appointments together first; blocked time slots are grouped at the end.
+ visible.sort((a,b)=>Number(a.status==='blocked')-Number(b.status==='blocked'));
  for(const b of visible){
-  const card=document.createElement('article');card.className='booking';
   const isBlock=b.status==='blocked'||b.customer_name==='BLOCCATO'||b.customer_phone==='ADMIN';
+  const card=document.createElement('article');card.className='booking'+(isBlock&&b.status==='blocked'?' booking--blocked':'');
   const name=document.createElement('strong');name.textContent=isBlock?(b.status==='blocked'?'🔒 Blocco orario':'🔓 Blocco sbloccato'):(b.customer_name||'Cliente');card.append(name);
   line(card,'Data',dateRome(b.starts_at));
   if(b.ends_at)line(card,'Fine',dateRome(b.ends_at));
@@ -311,17 +313,27 @@ const maps='https://www.google.com/maps/search/?api=1&query=VERTEX%20by%20HAMMAM
  ].join('\n');
  return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
 }
+function vertexWhatsAppRejectionUrl(b){
+ const phone=vertexWhatsAppNumber(b.customer_phone);
+ if(!phone)return '';
+ const name=String(b.customer_name||'').trim();
+ const greeting=name?'Ciao '+name+',':'Ciao,';
+ const message=greeting+' mi dispiace, l’orario che hai richiesto non è disponibile. Puoi scegliere un altro orario qui https://www.vertexhammami.it/#prenota. Grazie, VERTEX HAMMAMI.';
+ return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+}
 async function changeStatus(b,status){
  const label=statusLabels[status]||status;
  if(loading)return;
  if(!window.confirm('Confermi di cambiare lo stato di «'+(b.customer_name||'Cliente')+'» in «'+label+'»?'))return;
- const whatsappUrl=status==='confirmed'?vertexWhatsAppConfirmationUrl(b):'';
+ const notifyCustomer=status==='confirmed'||status==='rejected';
+ const whatsappUrl=status==='confirmed'?vertexWhatsAppConfirmationUrl(b)
+  :status==='rejected'?vertexWhatsAppRejectionUrl(b):'';
  // Apri una scheda vuota durante il clic: iOS può bloccare popup aperti dopo await.
  let whatsappTab=null;
  if(whatsappUrl){
   whatsappTab=window.open('about:blank','_blank');
   if(whatsappTab){
-   try{whatsappTab.opener=null;whatsappTab.document.title='VERTEX HAMMAMI';whatsappTab.document.body.textContent='Conferma in corso…';}catch(_error){}
+   try{whatsappTab.opener=null;whatsappTab.document.title='VERTEX HAMMAMI';whatsappTab.document.body.textContent=status==='rejected'?'Rifiuto in corso…':'Conferma in corso…';}catch(_error){}
   }
  }
  loading=true;
@@ -340,8 +352,8 @@ async function changeStatus(b,status){
   loading=false;
  }
  if(!saved){render();return;}
- // La conferma risulta salvata: WhatsApp si apre solo ora, mai prima.
- if(status==='confirmed'){
+ // Apri la bozza WhatsApp solo dopo il salvataggio dello stato.
+ if(notifyCustomer){
   if(whatsappUrl){
    if(whatsappTab&&!whatsappTab.closed){
     try{whatsappTab.location.replace(whatsappUrl);}catch(_error){window.location.href=whatsappUrl;}
@@ -350,7 +362,8 @@ async function changeStatus(b,status){
     window.location.href=whatsappUrl;
    }
   }else{
-   window.alert('Prenotazione confermata. Numero WhatsApp mancante o senza prefisso internazionale valido: invia il messaggio manualmente.');
+   const savedStatus=status==='rejected'?'Prenotazione rifiutata.':'Prenotazione confermata.';
+   window.alert(savedStatus+' Numero WhatsApp mancante o senza prefisso internazionale valido: invia il messaggio manualmente.');
   }
  }
  try{
