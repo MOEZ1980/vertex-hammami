@@ -283,7 +283,9 @@ function fillSummary() {
   });
 }
 function showStep(n) {
-  n=Math.max(0,Math.min(4,Number(n))); step=n;
+  n=Math.max(0,Math.min(4,Number(n)));
+  const movingForward=n>step;
+  step=n;
   steps.forEach((el,i)=>{el.hidden=i!==n});
   $('wizardTopBack').hidden=n===0 || completed;
   $('wizardCount').textContent=`PASSO ${n+1} DI 5`;
@@ -306,7 +308,15 @@ function showStep(n) {
   }
   if (n===2) updateServiceOptions();
   if (n===4) fillSummary();
-  $('prenota').scrollIntoView({behavior:'smooth',block:'start'});
+  if (movingForward) {
+    const heading=steps[n].querySelector('h3');
+    heading.tabIndex=-1;
+    heading.style.scrollMarginTop=(document.querySelector('header').offsetHeight+16)+'px';
+    heading.focus({preventScroll:true});
+    heading.scrollIntoView({behavior:'instant',block:'start'});
+  } else {
+    $('prenota').scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 $('wizardTopBack').addEventListener('click',()=>{if(!completed)showStep(step-1)});
 date.addEventListener('change',()=>chooseDay(date.value));
