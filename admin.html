@@ -9,16 +9,16 @@
 <title>VERTEX by HAMMAMI | Gestione prenotazioni</title>
 <style>
 :root{color-scheme:dark;--bg:#0d0b09;--panel:#1b1712;--line:#69502f;--gold:#e6c486;--gold2:#f8dfa6;--text:#f8f3eb;--muted:#c9bda8;--green:#a3dfae;--red:#ffb2a9}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#292015 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+*{box-sizing:border-box}body{margin:0;padding-bottom:82px;background:radial-gradient(ellipse at 90% 0%,#292015 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
 header{border-bottom:1px solid var(--line);padding:20px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
 h1{font:700 clamp(24px,4vw,34px) Georgia,serif;color:var(--gold);margin:0}h1 span{font-size:.65em;color:var(--text)}h2{margin:0 0 5px;color:var(--gold);font-size:22px}small,.muted{color:var(--muted)}main{max-width:1120px;margin:30px auto;padding:0 18px 70px}.panel{border:1px solid var(--line);background:var(--panel);padding:22px;border-radius:12px;margin-bottom:18px;box-shadow:0 12px 30px #0002}
 #login{max-width:500px;margin:48px auto}label{display:block;margin:15px 0 6px;font-weight:600}input,select{background:#100e0b;border:1px solid #7a6341;border-radius:7px;color:var(--text);padding:12px 13px;font:inherit;width:100%}
 button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius:7px;padding:12px 16px;cursor:pointer;color:#20180e;background:linear-gradient(120deg,#ffe4a9,#bd8f4c)}button:hover:not(:disabled){filter:brightness(1.08)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#201b14;color:var(--gold)}button.danger{background:#512d2a;border-color:#a36c64;color:#fff}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold)}
 .toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.toolbar-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.toolbar select{width:auto;min-width:155px}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.stat{background:#211b14;border:1px solid #58442b;padding:9px 13px;border-radius:9px;color:var(--muted)}.stat strong{color:var(--gold2);margin-right:5px}
 .notice{border:1px solid #947747;border-left:5px solid var(--gold);border-radius:9px;padding:13px 16px;background:#292216;color:var(--gold2);margin-bottom:18px;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{border-color:#b85e58;border-left-color:#e77e74;color:#ffd1c9;background:#3a211f}.notice.success{border-color:#618c67;border-left-color:#8ed29a;color:#d2f5d8;background:#1c3021}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}.booking{border:1px solid #57442e;background:#1b1712;border-radius:9px;padding:7px 9px;display:flex;flex-direction:column;gap:2px;min-width:0}.booking strong{font-size:16px;color:var(--gold2);overflow-wrap:anywhere}.booking-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;padding-bottom:6px;margin-bottom:1px;border-bottom:1px solid #57442e}.booking-head .customer-name{font-size:14px;font-weight:800;color:var(--gold2);min-width:0}.booking-head .appointment-date{font-size:12px;font-weight:800;color:#f8f3eb;text-align:right;line-height:1.35;max-width:58%;overflow-wrap:anywhere}.booking--blocked .booking-head .customer-name{font-size:14px}.booking--blocked .booking-head .appointment-date{font-size:12px}@media(max-width:480px){.booking-head{gap:8px}.booking-head .customer-name{font-size:19px}.booking-head .appointment-date{font-size:14px;max-width:60%}}.booking p{margin:0;overflow-wrap:anywhere;font-size:11px;line-height:1.25}.booking .service-highlight{margin:2px 0 3px;padding:4px 6px;border-left:3px solid var(--gold);background:#241d14;color:var(--gold2);font-size:15px;font-weight:800;line-height:1.25}.booking--blocked .service-highlight{font-size:11px;padding:2px 4px;margin:1px 0}
-.booking--blocked{padding:7px 9px;gap:2px;border-radius:9px;background:#191610}.booking--blocked strong{font-size:16px}.booking--blocked p{font-size:11px;line-height:1.25}.booking--blocked .status{display:inline-flex;width:fit-content;margin-top:3px;padding:3px 9px;border:1px solid #52446f;border-radius:999px;background:#272033;font-size:12px}.status{font-weight:750}.status.pending{color:#f5cf70}.status.confirmed{color:var(--green)}.status.rejected,.status.cancelled{color:var(--red)}.status.blocked{color:#c4b8f3}.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}.actions button{flex:1 0 auto;padding:9px 12px;font-size:13px}.booking a{color:var(--gold)}.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted)}.footnote{font-size:13px;color:var(--muted);margin-top:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}.booking{border:1px solid #57442e;background:#1b1712;border-radius:11px;padding:19px;display:flex;flex-direction:column;gap:7px;min-width:0;cursor:pointer}.booking:hover{border-color:#c49c58}.booking:focus-visible{outline:3px solid var(--gold)}.booking strong{font-size:19px;color:var(--gold2);overflow-wrap:anywhere}.booking .appointment-time{order:-2;margin:-2px 0 4px;padding:10px 12px;border:1px solid #8c6b3d;border-radius:8px;background:#241d14;color:#f8dfa6;font-size:18px;font-weight:800;line-height:1.35}.booking .customer-name{order:-1;font-size:19px}.booking p{margin:0;overflow-wrap:anywhere}.status{font-weight:750}.status.pending{color:#f5cf70}.status.confirmed{color:var(--green)}.status.rejected,.status.cancelled{color:var(--red)}.status.blocked{color:#c4b8f3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}.actions button{flex:1 0 auto}.booking a{color:var(--gold)}.empty{border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted)}.footnote{font-size:13px;color:var(--muted);margin-top:18px}
 [hidden]{display:none!important}@media(max-width:560px){header{padding:17px}main{margin:20px auto}.panel{padding:17px}.toolbar-controls{width:100%}.toolbar-controls select{flex:1}.toolbar-controls button{flex:1}}
+.bottom-nav{position:fixed;z-index:50;inset:auto 0 0;display:grid;grid-template-columns:1fr 1fr;padding:8px max(12px,calc((100vw - 720px)/2)) calc(8px + env(safe-area-inset-bottom));background:#100d0aee;border-top:1px solid #69502f;backdrop-filter:blur(12px)}.bottom-nav a{min-height:54px;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:9px;color:var(--muted);text-decoration:none;font-weight:750}.bottom-nav a[aria-current="page"]{background:#2b2114;color:var(--gold2)}.bottom-nav .nav-icon{font-size:20px}@media(max-width:420px){.bottom-nav a{font-size:13px;gap:6px}}
 
 /* Gestione orari e modifica appuntamenti */
 .schedule-grid,.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
@@ -30,28 +30,29 @@ button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius
 .dialog-shell{background:#1b1712;border:1px solid var(--gold);color:var(--text);border-radius:13px;width:min(94vw,600px);max-height:90dvh;overflow-y:auto;padding:23px;box-shadow:0 18px 80px #000b}
 .dialog-shell::backdrop{background:#000b}
 #schedulePanel h3{margin:0 0 8px;color:var(--gold2)}
+.booking-dialog{background:#1b1712;border:1px solid var(--gold);color:var(--text);border-radius:13px;width:min(94vw,600px);max-height:90dvh;overflow-y:auto;padding:22px;box-shadow:0 18px 80px #000b}.booking-dialog::backdrop{background:#000b}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}.detail-item{padding:9px;background:#241d14;border-radius:7px;overflow-wrap:anywhere}.detail-item b{color:var(--gold2)}.detail-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0 8px}.detail-actions .wide{grid-column:1/-1}.detail-actions button{width:100%}.detail-actions .paid{background:#24422a;border-color:#699872;color:#d2f5d8}.detail-actions .danger{background:#512d2a;border-color:#a36c64;color:#fff}.dialog-close{width:100%}
 @media(max-width:560px){.schedule-grid,.edit-grid{grid-template-columns:1fr}.schedule-grid .full,.edit-grid .full{grid-column:1}.dialog-shell{padding:17px}}
+@media(max-width:560px){.booking-dialog{padding:16px}.detail-grid{grid-template-columns:1fr}.detail-actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header><div><h1>VERTEX <span>by HAMMAMI</span></h1><small>Area riservata · Gestione appuntamenti</small></div><button id="logout" class="secondary" hidden>Esci</button></header>
+<header><div><h1>VERTEX <span>HAMMAMI</span></h1><small>Area riservata · Gestione appuntamenti</small></div><nav class="toolbar-controls"><button id="logout" class="secondary" hidden>Esci</button></nav></header>
 <main>
 <section id="login" class="panel"><h2>Accesso amministratore</h2><p class="muted">Accedi con il tuo account autorizzato.</p><form id="loginForm"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required><p><button id="loginBtn" type="submit">ACCEDI</button></p></form></section>
 <section id="dashboard" hidden>
 
-<section class="panel" id="barbersPanel">
-  <h2>Gestione barbieri</h2>
-  <p class="muted">Quando un collaboratore inizia, premi “Attiva / nuovo nome” e inserisci il suo nome. Quando termina, premi “Disattiva”; il prossimo collaboratore potrà usare lo stesso posto con un nuovo nome.</p>
-  <form id="addBarberForm" class="toolbar" style="margin:12px 0">
-    <label for="newBarberName" class="sr-only">Nome del barbiere</label>
-    <input id="newBarberName" name="name" type="text" maxlength="80" placeholder="Nome del barbiere" required style="max-width:420px">
-    <button id="addBarberButton" type="submit">＋ Aggiungi nome</button>
-  </form>
-  <div id="barbersList">Caricamento barbieri...</div>
-</section>
-
- 
- <div class="panel toolbar"><div><h2>Prenotazioni</h2><small>Le richieste vengono confermate solo dal titolare.</small></div><div class="toolbar-controls"><select id="filter" aria-label="Filtra prenotazioni"><option value="all">Tutte</option><option value="pending">In attesa</option><option value="confirmed">Confermate</option><option value="rejected">Rifiutate</option><option value="cancelled">Annullate</option><option value="blocked">Orari bloccati</option></select><button id="toggleSchedule" class="secondary" type="button" aria-expanded="false" aria-controls="schedulePanel">🕒 Gestione orari</button><button id="refresh" class="secondary" type="button">↻ Aggiorna</button></div></div>
+ <div class="panel toolbar"><div><h2>Prenotazioni</h2><small>Le richieste vengono confermate solo dal titolare. Premi una scheda per gestirla.</small></div><div class="toolbar-controls"><select id="filter" aria-label="Filtra prenotazioni"><option value="all">Tutte</option><option value="pending">In attesa</option><option value="confirmed">Confermate</option><option value="rejected">Rifiutate</option><option value="cancelled">Annullate</option><option value="blocked">Orari bloccati</option><option value="paid">Pagate</option><option value="hidden">Eliminate / nascoste</option></select><button id="toggleSchedule" class="secondary" type="button" aria-expanded="false" aria-controls="schedulePanel">🕒 Gestione orari</button><button id="refresh" class="secondary" type="button">↻ Aggiorna</button></div></div>
+ <section class="panel" aria-label="Periodo dell’agenda">
+  <div class="toolbar"><div><h2>Agenda</h2><p class="muted" id="agendaRange"></p></div>
+   <div class="toolbar-controls">
+    <button type="button" class="secondary" id="today">Oggi</button>
+    <button type="button" class="secondary" id="previous" aria-label="Periodo precedente">←</button>
+    <button type="button" class="secondary" id="next" aria-label="Periodo successivo">→</button>
+    <select id="agendaMode" aria-label="Vista"><option value="day">Giorno</option><option value="week">Settimana</option></select>
+    <input type="date" id="agendaDate" aria-label="Data dell’agenda" style="width:auto;max-width:100%">
+   </div>
+  </div>
+ </section>
  <section id="schedulePanel" class="panel" hidden aria-label="Gestione orari">
   <h3>Blocca un orario</h3>
   <p class="muted">Riserva una pausa, un cliente senza prenotazione o un giorno di chiusura. Il blocco impedisce nuove richieste sovrapposte quando il sito usa Supabase.</p>
@@ -73,6 +74,7 @@ button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius
 </section>
 <div id="loginMessage" class="notice" role="status" aria-live="polite" hidden></div>
 </main>
+<nav class="bottom-nav" aria-label="Pagine amministratore"><a href="./admin.html" aria-current="page"><span class="nav-icon" aria-hidden="true">📋</span><span>Prenotazioni</span></a><a href="./calendar.html"><span class="nav-icon" aria-hidden="true">🗓</span><span>Calendario Oggi</span></a></nav>
 <dialog id="editDialog" class="dialog-shell" aria-labelledby="editTitle">
  <h2 id="editTitle">Modifica prenotazione</h2>
  <p class="hint">La conferma del titolare resta invariata. Un orario occupato non può essere sovrapposto.</p>
@@ -89,7 +91,31 @@ button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius
   <div class="form-actions"><button type="submit">💾 Salva modifica</button><button type="button" class="secondary" id="cancelEdit">Annulla</button></div>
  </form>
 </dialog>
-<script>
+
+<dialog id="bookingDetails" class="booking-dialog" aria-labelledby="bookingDetailName">
+ <h2 id="bookingDetailName"></h2><div id="bookingDetailBody" class="detail-grid"></div>
+ <div id="bookingDetailActions" class="detail-actions"></div>
+ <button id="closeBookingDetails" type="button" class="secondary dialog-close">Chiudi</button>
+</dialog>
+
+
+<button id="enableNotifications" type="button">
+  🔔 Attiva notifiche
+</button>
+
+
+
+
+<button id="testPushNotification" type="button"
+  style="margin:16px;padding:14px;">
+  🔔 Invia notifica di prova
+</button>
+
+
+
+<script type="module">
+
+import { agendaDay, agendaRange, shiftDay } from './agenda.mjs';
 'use strict';
 // Impostazioni riprese ESATTAMENTE dal file admin.html fornito dall'utente.
 // Non inserire mai una chiave service_role in questo file.
@@ -99,7 +125,7 @@ const $=id=>document.getElementById(id);
 let accessToken='',bookings=[],loading=false;
 // Sessione Supabase: persiste nell'app installata; NON memorizzare mai la password.
 const VERTEX_SESSION_KEY='vertex_hammami_admin_session_v1';
-let vertexSession=null,vertexRefreshPromise=null;
+let vertexSession=null,vertexRefreshPromise=null,sessionGeneration=0;
 function vertexSaveSession(data){
  if(!data||!data.access_token||!data.refresh_token)throw new Error('Sessione Supabase incompleta.');
  vertexSession={access_token:data.access_token,refresh_token:data.refresh_token,
@@ -108,7 +134,7 @@ function vertexSaveSession(data){
  accessToken=vertexSession.access_token;
 }
 function vertexClearSession(){
- vertexSession=null;accessToken='';localStorage.removeItem(VERTEX_SESSION_KEY);
+ sessionGeneration++;vertexSession=null;accessToken='';localStorage.removeItem(VERTEX_SESSION_KEY);
 }
 function vertexReadSession(){
  try{
@@ -123,6 +149,7 @@ async function vertexRefreshSession(force=false){
  if(!vertexSession?.refresh_token)throw new Error('Sessione assente. Accedi di nuovo.');
  if(!force&&vertexSession.expires_at>Date.now()+90000)return accessToken;
  if(vertexRefreshPromise)return vertexRefreshPromise;
+ const requestSession=sessionGeneration;
  vertexRefreshPromise=(async()=>{
   let response;
   try{response=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{
@@ -130,6 +157,7 @@ async function vertexRefreshSession(force=false){
    body:JSON.stringify({refresh_token:vertexSession.refresh_token})
   });}catch(error){throw new Error('Connessione assente: '+error.message);}
   const result=await response.json().catch(()=>({}));
+  if(requestSession!==sessionGeneration)throw new Error('Sessione terminata.');
   if(!response.ok){
    if(response.status===400||response.status===401||response.status===403)vertexClearSession();
    throw new Error(result.error_description||result.msg||result.message||'Rinnovo sessione non riuscito');
@@ -145,156 +173,20 @@ async function vertexRestoreSession(){
  try{
   await vertexRefreshSession(true);
   showDashboard(true);
-  await Promise.all([loadBarbers(),load()]);
+  await load();
  }catch(error){
   if(!accessToken){showDashboard(false);showNotice('Sessione scaduta. Accedi nuovamente.','error');}
-  else{showDashboard(true);showNotice('Connessione non disponibile. Premi Aggiorna quando torna Internet.','error');}
+  else{showDashboard(true);showNotice(location.protocol==='file:'?'Il file è aperto da Downloads (file://). Non dipende dalla fibra: apri la pagina dal sito HTTPS o da localhost per collegarti a Supabase.':'La sessione è presente, ma Supabase non ha risposto. Controlla il collegamento alla pagina/API e premi Aggiorna.','error');}
   console.warn('Ripristino accesso VERTEX:',error);
  }
 }
 
  const statusLabels={pending:'In attesa',confirmed:'Confermato',rejected:'Rifiutato',cancelled:'Annullato',blocked:'Orario bloccato'};
+const PAID_KEY='vertex_hammami_paid_ids_v1';
+const HIDDEN_KEY='vertex_hammami_calendar_hidden_ids_v1';
+function savedIds(key){try{return new Set(JSON.parse(localStorage.getItem(key)||'[]').map(String))}catch{return new Set()}}
+function storeIds(key,set){localStorage.setItem(key,JSON.stringify([...set]))}
 
-let barbers = [];
-
-$('addBarberForm').addEventListener('submit', async event => {
-  event.preventDefault();
-  const input = $('newBarberName');
-  const button = $('addBarberButton');
-  const name = input.value.trim();
-  if (!name) return;
-  button.disabled = true;
-  try {
-    await api('/functions/v1/admin-bookings', { action: 'barber_add', name }, accessToken);
-    input.value = '';
-    await loadBarbers();
-    showNotice('Nome aggiunto. Attivalo quando il barbiere inizia.', 'success');
-  } catch (error) {
-    showNotice(error.message || 'Impossibile aggiungere il barbiere.', 'error');
-  } finally {
-    button.disabled = false;
-  }
-});
-
-async function loadBarbers() {
-  const result = await api("/functions/v1/admin-bookings", {
-    action: "barbers_list"
-  }, accessToken);
-
-  barbers = result.barbers || [];
-  const container = $("barbersList");
-  container.replaceChildren();
-
-  for (const barber of barbers) {
-    const row = document.createElement("div");
-    row.className = "toolbar";
-
-    const name = document.createElement("strong");
-    name.textContent = barber.name;
-
-    const controls = document.createElement("div");
-    controls.className = "toolbar-controls";
-
-    // Keep the owner first, allow active/inactive toggle, but never rename or delete.
-    if (Number(barber.id) === 1) {
-      const ownerButton = document.createElement("button");
-      ownerButton.type = "button";
-      ownerButton.textContent = barber.is_active ? "Disattiva" : "Attiva";
-      ownerButton.onclick = async () => {
-        ownerButton.disabled = true;
-        try {
-          await api("/functions/v1/admin-bookings", {
-            action: "barber_toggle",
-            barber_id: barber.id,
-            is_active: !barber.is_active
-          }, accessToken);
-          await loadBarbers();
-          showNotice("Stato del titolare aggiornato.", "success");
-        } catch (error) {
-          showNotice(error.message || "Impossibile aggiornare lo stato.", "error");
-          ownerButton.disabled = false;
-        }
-      };
-      controls.append(ownerButton);
-      row.append(name, controls);
-      container.append(row);
-      continue;
-    }
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = barber.is_active ? "Disattiva" : "Attiva / nuovo nome";
-    button.onclick = async () => {
-      try {
-        button.disabled = true;
-        if (!barber.is_active) {
-          const enteredName = prompt("Inserisci il nome del barbiere per attivarlo:", "");
-          if (enteredName === null) {
-            button.disabled = false;
-            return;
-          }
-
-          const name = enteredName.trim();
-          if (!name || name.length > 80) {
-            alert("Inserisci un nome valido (massimo 80 caratteri).");
-            button.disabled = false;
-            return;
-          }
-
-          await api("/functions/v1/admin-bookings", {
-            action: "barber_rename_activate",
-            barber_id: barber.id,
-            name
-          }, accessToken);
-          await loadBarbers();
-          showNotice("Nome aggiornato e barbiere attivato.", "success");
-          return;
-        }
-
-        await api("/functions/v1/admin-bookings", {
-          action: "barber_toggle",
-          barber_id: barber.id,
-          is_active: !barber.is_active
-        }, accessToken);
-        await loadBarbers();
-      } catch (error) {
-        alert(error.message);
-        button.disabled = false;
-      }
-    };
-
-    controls.append(button);
-
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.className = "danger";
-    deleteButton.textContent = "Elimina";
-    deleteButton.title = barber.is_active ? "Disattiva prima il barbiere" : "Elimina questo nome";
-    deleteButton.onclick = async () => {
-      if (barber.is_active) {
-        showNotice("Disattiva prima il barbiere, poi potrai eliminarlo.", "error");
-        return;
-      }
-      if (!confirm(`Eliminare definitivamente il nome “${barber.name}”?`)) return;
-      deleteButton.disabled = true;
-      try {
-        await api("/functions/v1/admin-bookings", {
-          action: "barber_delete",
-          barber_id: barber.id
-        }, accessToken);
-        await loadBarbers();
-        showNotice("Nome eliminato.", "success");
-      } catch (error) {
-        showNotice(error.message || "Impossibile eliminare il nome.", "error");
-        deleteButton.disabled = false;
-      }
-    };
-    controls.append(deleteButton);
-
-    row.append(name, controls);
-    container.append(row);
-  }
-}
 function showNotice(text,type='info'){
  const el=accessToken?$('dashboardMessage'):$('loginMessage');
  el.hidden=false;el.textContent=text;el.className='notice'+(type==='error'?' error':type==='success'?' success':'');
@@ -317,72 +209,106 @@ async function api(path,body,token=''){
  return data;
 }
 function dateRome(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'Data non valida':d.toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'full',timeStyle:'short'})}
-function appointmentRange(start,end){if(!start)return '—';const a=new Date(start);if(Number.isNaN(a.getTime()))return 'Data non valida';const day=a.toLocaleDateString('it-IT',{timeZone:'Europe/Rome',weekday:'long',day:'numeric',month:'long',year:'numeric'});const timeOptions={timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false};const from=a.toLocaleTimeString('it-IT',timeOptions);if(!end)return day+' • '+from;const b=new Date(end);if(Number.isNaN(b.getTime()))return day+' • '+from;return day+' • '+from+'–'+b.toLocaleTimeString('it-IT',timeOptions)}
 function line(card,label,value){const p=document.createElement('p');const strong=document.createElement('b');strong.textContent=label+': ';p.append(strong,document.createTextNode(String(value??'—')));card.append(p)}
+function openBookingDetails(b){
+ const isBlock=b.status==='blocked'||b.customer_name==='BLOCCATO'||b.customer_phone==='ADMIN';
+ if(isBlock)return;
+ const paid=savedIds(PAID_KEY),hidden=savedIds(HIDDEN_KEY),id=String(b.id);
+ $('bookingDetailName').textContent=b.customer_name||'Cliente';
+ const body=$('bookingDetailBody');body.replaceChildren();
+ const duration=Math.round((Date.parse(b.ends_at)-Date.parse(b.starts_at))/60000);
+ const fields=[['Data',dateRome(b.starts_at)],['Orario',new Date(b.starts_at).toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'})+(b.ends_at?' – '+new Date(b.ends_at).toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'}):'')],['Servizio',b.service_name||'—'],['Durata',Number.isFinite(duration)&&duration>0?duration+' min':'—'],['Prezzo',b.price==null?'—':b.price+' €'],['Telefono',b.customer_phone||'—'],['Stato',paid.has(id)?'Pagato':(statusLabels[b.status]||b.status||'—')]];
+ for(const [label,value] of fields){const item=document.createElement('div');item.className='detail-item';const bold=document.createElement('b');bold.textContent=label+': ';item.append(bold,document.createTextNode(String(value)));body.append(item)}
+ const actions=$('bookingDetailActions');actions.replaceChildren();
+ const add=(label,fn,className='')=>{const button=document.createElement('button');button.type='button';button.textContent=label;if(className)button.className=className;button.disabled=loading;button.onclick=fn;actions.append(button)};
+ if(b.customer_phone){const phone=String(b.customer_phone).replace(/[^+\d]/g,'');if(phone)add('☎ Chiama',()=>location.href='tel:'+phone,'secondary')}
+ if(paid.has(id))add('↩ Annulla “Pagato”',()=>{const ids=savedIds(PAID_KEY);ids.delete(id);storeIds(PAID_KEY,ids);$('bookingDetails').close();render();showNotice('Pagamento rimosso.','success')},'secondary');
+ else if(['pending','confirmed'].includes(b.status))add('✓ Pagato',()=>{const ids=savedIds(PAID_KEY);ids.add(id);storeIds(PAID_KEY,ids);$('bookingDetails').close();render();showNotice('Pagamento registrato. Appuntamento tolto dalla lista operativa.','success')},'paid');
+ if(hidden.has(id))add('Ripristina appuntamento',()=>{const ids=savedIds(HIDDEN_KEY);ids.delete(id);storeIds(HIDDEN_KEY,ids);$('bookingDetails').close();render();showNotice('Appuntamento ripristinato.','success')},'secondary');
+ else add('Elimina',()=>{if(!confirm('Nascondere questo appuntamento dalle liste operative? Il record resta conservato in Supabase e potrai ripristinarlo dal filtro “Eliminate / nascoste”.'))return;const ids=savedIds(HIDDEN_KEY);ids.add(id);storeIds(HIDDEN_KEY,ids);$('bookingDetails').close();render();showNotice('Appuntamento nascosto.','success')},'danger');
+ if(['pending','confirmed'].includes(b.status))add('Annulla appuntamento',()=>{$('bookingDetails').close();changeStatus(b,'cancelled')},'secondary');
+ if(b.status==='pending'){
+  add('Conferma',()=>{$('bookingDetails').close();changeStatus(b,'confirmed')});
+  add('Rifiuta',()=>{$('bookingDetails').close();changeStatus(b,'rejected')},'danger');
+ }
+ add('✎ Modifica',()=>{$('bookingDetails').close();openEdit(b)});
+ $('bookingDetails').showModal();
+}
 function render(){
  const cards=$('cards');cards.replaceChildren();
  const f = $('filter').value;
 
-const today = new Date().toLocaleDateString('sv-SE', {
-  timeZone: 'Europe/Rome'
-});
-
-const visible = bookings.filter(b => {
-  const status = String(b.status || '').toLowerCase();
-
-  if (['cancelled', 'rejected', 'unblocked'].includes(status)) {
-    return false;
-  }
-
-  const bookingDay = new Date(b.starts_at).toLocaleDateString('sv-SE', {
-    timeZone: 'Europe/Rome'
-  });
-
-  if (bookingDay < today) return false;
-
-  return f === 'all' || status === f;
-});
+ const [from,until]=agendaRange($('agendaDate').value,$('agendaMode').value==='week');
+ const format=day=>new Date(day+'T12:00:00Z').toLocaleDateString('it-IT',{timeZone:'UTC',dateStyle:'full'});
+ $('agendaRange').textContent=$('agendaMode').value==='week' ? format(from)+' – '+format(shiftDay(until,-1)) : format(from);
+ const periodBookings=bookings.filter(b=>{
+  if(!Number.isFinite(Date.parse(b.starts_at)))return false;
+  const day=agendaDay(b.starts_at);
+  const end=Date.parse(b.ends_at);
+  const lastDay=Number.isFinite(end)?agendaDay(end-1):day;
+  return day<until && lastDay>=from && b.status!=='unblocked';
+ }).sort((a,b)=>Date.parse(a.starts_at)-Date.parse(b.starts_at));
+ const paidIds=savedIds(PAID_KEY),hiddenIds=savedIds(HIDDEN_KEY);
+ const visible=periodBookings.filter(b=>{
+  const id=String(b.id);
+  if(f==='hidden')return hiddenIds.has(id);
+  if(hiddenIds.has(id))return false;
+  if(f==='paid')return paidIds.has(id);
+  if(paidIds.has(id))return false;
+  return f==='all'||b.status===f;
+ });
  $('stats').replaceChildren();
- for(const [label,count] of [['Totale',bookings.length],['In attesa',bookings.filter(b=>b.status==='pending').length],['Confermate',bookings.filter(b=>b.status==='confirmed').length],['Bloccati',bookings.filter(b=>b.status==='blocked').length]]){
+ for(const [label,count] of [['Totale',periodBookings.length],['In attesa',periodBookings.filter(b=>b.status==='pending').length],['Confermate',periodBookings.filter(b=>b.status==='confirmed').length],['Bloccati',periodBookings.filter(b=>b.status==='blocked').length]]){
   const span=document.createElement('span');span.className='stat';const bold=document.createElement('strong');bold.textContent=String(count);span.append(bold,document.createTextNode(label));$('stats').append(span);
  }
  if(!visible.length){const p=document.createElement('div');p.className='empty';p.textContent='Nessuna prenotazione per questo filtro.';cards.append(p);return}
- // Keep customer appointments together first; blocked time slots are grouped at the end.
- visible.sort((a,b)=>Number(a.status==='blocked')-Number(b.status==='blocked'));
  for(const b of visible){
+  const card=document.createElement('article');card.className='booking';
   const isBlock=b.status==='blocked'||b.customer_name==='BLOCCATO'||b.customer_phone==='ADMIN';
-  const card=document.createElement('article');card.className='booking'+(isBlock&&b.status==='blocked'?' booking--blocked':'');
-  const head=document.createElement('div');head.className='booking-head';
-  const name=document.createElement('strong');name.className='customer-name';name.textContent=isBlock?(b.status==='blocked'?'🔒 Blocco orario':'🔓 Blocco sbloccato'):(b.customer_name||'Cliente');head.append(name);
-  const appointmentDate=document.createElement('span');appointmentDate.className='appointment-date';appointmentDate.textContent=appointmentRange(b.starts_at,b.ends_at);head.append(appointmentDate);card.append(head);
-  if(isBlock){line(card,'Servizio',b.service_name||'—')}else{const service=document.createElement('p');service.className='service-highlight';service.textContent='✂ '+(b.service_name||'—');card.append(service)}
+  const when=document.createElement('div');when.className='appointment-time';when.textContent=dateRome(b.starts_at);card.append(when);
+  const name=document.createElement('strong');name.className='customer-name';name.textContent=isBlock?(b.status==='blocked'?'🔒 Blocco orario':'🔓 Blocco sbloccato'):(b.customer_name||'Cliente');card.append(name);
+  if(b.ends_at)line(card,'Fine',dateRome(b.ends_at));
+  line(card,'Servizio',b.service_name||'—');
+  if(!isBlock && Date.parse(b.ends_at)>Date.parse(b.starts_at))line(card,'Durata',Math.round((Date.parse(b.ends_at)-Date.parse(b.starts_at))/60000)+' min');
   if(!isBlock)line(card,'Prezzo',b.price!=null?b.price+' €':'—');
   if(!isBlock)line(card,'Telefono',b.customer_phone||'—');
   const st=document.createElement('p');st.className='status '+(isBlock&&b.status==='cancelled'?'confirmed':(b.status||''));st.textContent='Stato: '+(isBlock&&b.status==='cancelled'?'Sbloccato':(statusLabels[b.status]||b.status||'—'));card.append(st);
-  if(!isBlock&&b.customer_phone){const phone=String(b.customer_phone).replace(/[^+\d]/g,'');if(phone){const a=document.createElement('a');a.href='tel:'+phone;a.textContent='Chiama il cliente';card.append(a)}}
-  const actions=document.createElement('div');actions.className='actions';
-  if(b.status==='pending'||b.status==='confirmed'){
-   const edit=document.createElement('button');edit.type='button';edit.className='secondary';edit.textContent='✎ Modifica';edit.disabled=loading;edit.onclick=()=>openEdit(b);actions.append(edit);
+  if(isBlock){
+   const actions=document.createElement('div');actions.className='actions';
+   if(b.status==='blocked'){const unblock=document.createElement('button');unblock.type='button';unblock.className='secondary';unblock.textContent='🔓 Sblocca';unblock.disabled=loading;unblock.onclick=e=>{e.stopPropagation();unblockTime(b)};actions.append(unblock)}
+   card.append(actions);
+  }else{
+   card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Apri appuntamento di '+(b.customer_name||'Cliente'));
+   card.onclick=()=>openBookingDetails(b);
+   card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBookingDetails(b)}};
   }
-  if(b.status==='blocked'){
-   const unblock=document.createElement('button');unblock.type='button';unblock.className='secondary';unblock.textContent='🔓 Sblocca';unblock.disabled=loading;unblock.onclick=()=>unblockTime(b);actions.append(unblock);
-  }
-  let choices=[];
-  if(b.status==='pending')choices=[['confirmed','Conferma',''],['rejected','Rifiuta','danger'],['cancelled','Annulla','secondary']];
-  if(b.status==='confirmed')choices=[['cancelled','Annulla','secondary']];
-  for(const [status,label,cls] of choices){const btn=document.createElement('button');btn.type='button';btn.className=cls;btn.textContent=label;btn.disabled=loading;btn.onclick=()=>changeStatus(b,status);actions.append(btn)}
-  card.append(actions);cards.append(card);
+  cards.append(card);
  }
 }
-async function load(){
- if(loading)return;loading=true;const btn=$('refresh');btn.disabled=true;btn.textContent='Caricamento…';showNotice('Aggiornamento in corso…');
+async function load({quiet=false}={}){
+ if(loading||!accessToken)return false;
+ const requestSession=sessionGeneration;loading=true;const btn=$('refresh');
+ if(!quiet){btn.disabled=true;btn.textContent='Caricamento…';showNotice('Aggiornamento in corso…');}
  try{
   const d=await api('/functions/v1/admin-bookings',{action:'list'},accessToken);
+  if(requestSession!==sessionGeneration)return false;
   if(!Array.isArray(d)&&!Array.isArray(d.bookings)&&!Array.isArray(d.data))throw new Error('Formato inatteso della risposta: manca bookings.');
   bookings=Array.isArray(d)?d:Array.isArray(d.bookings)?d.bookings:d.data;
   $('lastRefresh').textContent='Ultimo aggiornamento: '+new Date().toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'short',timeStyle:'medium'});
-  showNotice('✓ Aggiornamento completato. Prenotazioni caricate: '+bookings.length,'success');
- }catch(e){showNotice('Errore durante Aggiorna: '+e.message,'error');console.error('VERTEX caricamento prenotazioni:',e)}
+  if(!quiet || $('dashboardMessage').dataset.syncError){
+   showNotice('Agenda aggiornata.','success');
+   delete $('dashboardMessage').dataset.syncError;
+  }
+  return true;
+ }catch(e){
+  if(requestSession!==sessionGeneration)return false;
+  if(/^HTTP (401|403)\b/.test(e.message)||!accessToken){
+   vertexClearSession();bookings=[];showDashboard(false);
+  }
+  $('dashboardMessage').dataset.syncError='1';
+  showNotice('Agenda non aggiornata: '+e.message,'error');
+  return false;
+ }
  finally{loading=false;btn.disabled=false;btn.textContent='↻ Aggiorna';render()}
 }
 // Numero WhatsApp: supporta cellulari italiani e numeri internazionali con prefisso.
@@ -416,27 +342,17 @@ const maps='https://www.google.com/maps/search/?api=1&query=VERTEX%20by%20HAMMAM
  ].join('\n');
  return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
 }
-function vertexWhatsAppRejectionUrl(b){
- const phone=vertexWhatsAppNumber(b.customer_phone);
- if(!phone)return '';
- const name=String(b.customer_name||'').trim();
- const greeting=name?'Ciao '+name+',':'Ciao,';
- const message=greeting+' mi dispiace, l’orario che hai richiesto non è disponibile. Puoi scegliere un altro orario qui https://www.vertexhammami.it/#prenota. Grazie, VERTEX HAMMAMI.';
- return 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
-}
 async function changeStatus(b,status){
  const label=statusLabels[status]||status;
  if(loading)return;
  if(!window.confirm('Confermi di cambiare lo stato di «'+(b.customer_name||'Cliente')+'» in «'+label+'»?'))return;
- const notifyCustomer=status==='confirmed'||status==='rejected';
- const whatsappUrl=status==='confirmed'?vertexWhatsAppConfirmationUrl(b)
-  :status==='rejected'?vertexWhatsAppRejectionUrl(b):'';
+ const whatsappUrl=status==='confirmed'?vertexWhatsAppConfirmationUrl(b):'';
  // Apri una scheda vuota durante il clic: iOS può bloccare popup aperti dopo await.
  let whatsappTab=null;
  if(whatsappUrl){
   whatsappTab=window.open('about:blank','_blank');
   if(whatsappTab){
-   try{whatsappTab.opener=null;whatsappTab.document.title='VERTEX HAMMAMI';whatsappTab.document.body.textContent=status==='rejected'?'Rifiuto in corso…':'Conferma in corso…';}catch(_error){}
+   try{whatsappTab.opener=null;whatsappTab.document.title='VERTEX HAMMAMI';whatsappTab.document.body.textContent='Conferma in corso…';}catch(_error){}
   }
  }
  loading=true;
@@ -455,8 +371,8 @@ async function changeStatus(b,status){
   loading=false;
  }
  if(!saved){render();return;}
- // Apri la bozza WhatsApp solo dopo il salvataggio dello stato.
- if(notifyCustomer){
+ // La conferma risulta salvata: WhatsApp si apre solo ora, mai prima.
+ if(status==='confirmed'){
   if(whatsappUrl){
    if(whatsappTab&&!whatsappTab.closed){
     try{whatsappTab.location.replace(whatsappUrl);}catch(_error){window.location.href=whatsappUrl;}
@@ -465,13 +381,11 @@ async function changeStatus(b,status){
     window.location.href=whatsappUrl;
    }
   }else{
-   const savedStatus=status==='rejected'?'Prenotazione rifiutata.':'Prenotazione confermata.';
-   window.alert(savedStatus+' Numero WhatsApp mancante o senza prefisso internazionale valido: invia il messaggio manualmente.');
+   window.alert('Prenotazione confermata. Numero WhatsApp mancante o senza prefisso internazionale valido: invia il messaggio manualmente.');
   }
  }
  try{
-  await load();
-  showNotice('✓ Stato aggiornato a «'+label+'». Elenco ricaricato.','success');
+  if(await load())showNotice('✓ Stato aggiornato a «'+label+'».','success');
  }catch(e){
   // Non presentare un errore di aggiornamento elenco come un errore di conferma.
   console.error('VERTEX ricaricamento dopo conferma:',e);
@@ -520,8 +434,7 @@ async function scheduleAction(payload,successText){
  try{
   await api(SCHEDULE_API,payload,accessToken);
   loading=false;
-  await load();
-  showNotice('✓ '+successText,'success');
+  if(await load())showNotice('✓ '+successText,'success');
   return true;
  }catch(e){
   const hint=String(e.message).includes('HTTP 404')?' Verifica che la Edge Function admin-schedule sia stata pubblicata.':'';
@@ -548,7 +461,7 @@ $('blockForm').addEventListener('submit',async e=>{
 $('blockDay').onclick=async()=>{
  try{
   const day=$('blockDate').value;
-  const starts_at=romeToISO(day,'00:00'),ends_at=romeToISO(day,'23:59');
+  const starts_at=romeToISO(day,'00:00'),ends_at=romeToISO(shiftDay(day,1),'00:00');
   if(!window.confirm('Bloccare TUTTA la giornata del '+day+'?'))return;
   await scheduleAction({action:'block',starts_at,ends_at,reason:'Chiusura giornaliera'},'Giornata bloccata.');
  }catch(err){showNotice(err.message,'error')}
@@ -576,7 +489,7 @@ $('cancelEdit').onclick=()=>$('editDialog').close();
 
 $('loginForm').addEventListener('submit',async e=>{
  e.preventDefault();const btn=$('loginBtn');btn.disabled=true;showNotice('Accesso in corso…');
- try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});vertexSaveSession(d);$('password').value='';showDashboard(true);await Promise.all([loadBarbers(),load()])}
+ try{const d=await api('/auth/v1/token?grant_type=password',{email:$('email').value.trim(),password:$('password').value});vertexSaveSession(d);$('password').value='';showDashboard(true);await load()}
  catch(err){showNotice('Accesso non riuscito: '+err.message,'error');console.error('VERTEX accesso:',err)}
  finally{btn.disabled=false}
 });
@@ -591,14 +504,20 @@ $('logout').onclick=async()=>{
  }
 };
 $('refresh').onclick=()=>load();$('filter').onchange=render;
+$('agendaDate').value=agendaDay();
+$('agendaDate').onchange=()=>{if(!$('agendaDate').value)$('agendaDate').value=agendaDay();render();};
+$('agendaMode').onchange=render;
+$('today').onclick=()=>{$('agendaDate').value=agendaDay();$('agendaMode').value='day';render();void load({quiet:true});};
+for(const [id,direction] of [['previous',-1],['next',1]]){
+ $(id).onclick=()=>{$('agendaDate').value=shiftDay($('agendaDate').value,direction*($('agendaMode').value==='week'?7:1));render();};
+}
+setInterval(()=>{if(!document.hidden&&accessToken)void load({quiet:true});},15000);
 // Riaprendo l'app dalla Home o da un link, rinnova la sessione quando serve.
 window.addEventListener('pageshow',()=>{if(!accessToken)vertexRestoreSession();});
 document.addEventListener('visibilitychange',()=>{
- if(!document.hidden&&vertexSession)vertexRefreshSession().catch(error=>console.warn('Rinnovo:',error));
+ if(!document.hidden&&accessToken)void load({quiet:true});
 });
-</script>
 
-<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
@@ -609,14 +528,8 @@ if ('serviceWorker' in navigator) {
     }
   });
 }
-</script>
-
-<button id="enableNotifications" type="button">
-  🔔 Attiva notifiche
-</button>
 
 
-<script>
 function vapidToBytes(base64) {
   const padding = "=".repeat((4 - base64.length % 4) % 4);
   const value = (base64 + padding)
@@ -699,14 +612,8 @@ document.getElementById("enableNotifications")
       button.disabled = false;
     }
   });
-</script>
 
-<button id="testPushNotification" type="button"
-  style="margin:16px;padding:14px;">
-  🔔 Invia notifica di prova
-</button>
 
-<script>
 document.getElementById("testPushNotification")
   .addEventListener("click", async () => {
     if (!accessToken) {
@@ -736,6 +643,5 @@ document.getElementById("testPushNotification")
     }
   });
 </script>
-
 </body>
 </html>
