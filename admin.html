@@ -41,11 +41,28 @@ button{font:700 14px system-ui,sans-serif;border:1px solid #c49c58;border-radius
 
 <section class="panel" id="barbersPanel">
   <h2>Gestione barbieri</h2>
-  <p class="muted">Attiva o disattiva i barbieri.</p>
+  <p class="muted">Quando un collaboratore inizia, premi “Attiva / nuovo nome” e inserisci il suo nome. Quando termina, premi “Disattiva”; il prossimo collaboratore potrà usare lo stesso posto con un nuovo nome.</p>
+  <form id="addBarberForm" class="toolbar" style="margin:12px 0">
+    <label for="newBarberName" class="sr-only">Nome del barbiere</label>
+    <input id="newBarberName" name="name" type="text" maxlength="80" placeholder="Nome del barbiere" required style="max-width:420px">
+    <button id="addBarberButton" type="submit">＋ Aggiungi nome</button>
+  </form>
   <div id="barbersList">Caricamento barbieri...</div>
 </section>
 
- 
+ <section class="panel" id="agendaPanel" aria-label="Calendario appuntamenti">
+  <div class="toolbar">
+   <div><h2>🗓 Calendario</h2><p class="muted" id="agendaHeading">Appuntamenti di oggi</p></div>
+   <div class="toolbar-controls">
+    <button id="agendaToday" type="button" class="secondary">Oggi</button>
+    <button id="agendaPrevious" type="button" class="secondary" aria-label="Periodo precedente">←</button>
+    <button id="agendaNext" type="button" class="secondary" aria-label="Periodo successivo">→</button>
+    <select id="agendaMode" aria-label="Vista calendario"><option value="day">Giorno</option><option value="week">Settimana</option></select>
+    <input id="agendaDate" type="date" aria-label="Scegli il giorno" style="width:auto">
+    <input id="bookingSearch" type="search" placeholder="Cerca nome o telefono" aria-label="Cerca cliente" style="width:auto;min-width:190px">
+   </div>
+  </div>
+ </section>
  <div class="panel toolbar"><div><h2>Prenotazioni</h2><small>Le richieste vengono confermate solo dal titolare.</small></div><div class="toolbar-controls"><select id="filter" aria-label="Filtra prenotazioni"><option value="all">Tutte</option><option value="pending">In attesa</option><option value="confirmed">Confermate</option><option value="rejected">Rifiutate</option><option value="cancelled">Annullate</option><option value="blocked">Orari bloccati</option></select><button id="toggleSchedule" class="secondary" type="button" aria-expanded="false" aria-controls="schedulePanel">🕒 Gestione orari</button><button id="refresh" class="secondary" type="button">↻ Aggiorna</button></div></div>
  <section id="schedulePanel" class="panel" hidden aria-label="Gestione orari">
   <h3>Blocca un orario</h3>
@@ -152,6 +169,25 @@ async function vertexRestoreSession(){
 
 let barbers = [];
 
+$('addBarberForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const input = $('newBarberName');
+  const button = $('addBarberButton');
+  const name = input.value.trim();
+  if (!name) return;
+  button.disabled = true;
+  try {
+    await api('/functions/v1/admin-bookings', { action: 'barber_add', name }, accessToken);
+    input.value = '';
+    await loadBarbers();
+    showNotice('Nome aggiunto. Attivalo quando il barbiere inizia.', 'success');
+  } catch (error) {
+    showNotice(error.message || 'Impossibile aggiungere il barbiere.', 'error');
+  } finally {
+    button.disabled = false;
+  }
+});
+
 async function loadBarbers() {
   const result = await api("/functions/v1/admin-bookings", {
     action: "barbers_list"
@@ -168,12 +204,50 @@ async function loadBarbers() {
     const name = document.createElement("strong");
     name.textContent = barber.name;
 
+    const controls = document.createElement("div");
+    controls.className = "toolbar-controls";
+
+    // The owner is always active; show a fixed badge with no activate/deactivate/delete actions.
+    if (Number(barber.id) === 1) {
+      const ownerBadge = document.createElement("strong");
+      ownerBadge.textContent = "Titolare · sempre attivo";
+      ownerBadge.style.color = "var(--green)";
+      controls.append(ownerBadge);
+      row.append(name, controls);
+      container.append(row);
+      continue;
+    }
+
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = barber.is_active ? "Disattiva" : "Attiva";
+    button.textContent = barber.is_active ? "Disattiva" : "Attiva / nuovo nome";
     button.onclick = async () => {
       try {
         button.disabled = true;
+        if (!barber.is_active) {
+          const enteredName = prompt("Inserisci il nome del barbiere per attivarlo:", "");
+          if (enteredName === null) {
+            button.disabled = false;
+            return;
+          }
+
+          const name = enteredName.trim();
+          if (!name || name.length > 80) {
+            alert("Inserisci un nome valido (massimo 80 caratteri).");
+            button.disabled = false;
+            return;
+          }
+
+          await api("/functions/v1/admin-bookings", {
+            action: "barber_rename_activate",
+            barber_id: barber.id,
+            name
+          }, accessToken);
+          await loadBarbers();
+          showNotice("Nome aggiornato e barbiere attivato.", "success");
+          return;
+        }
+
         await api("/functions/v1/admin-bookings", {
           action: "barber_toggle",
           barber_id: barber.id,
@@ -186,7 +260,35 @@ async function loadBarbers() {
       }
     };
 
-    row.append(name, button);
+    controls.append(button);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "danger";
+    deleteButton.textContent = "Elimina";
+    deleteButton.title = barber.is_active ? "Disattiva prima il barbiere" : "Elimina questo nome";
+    deleteButton.onclick = async () => {
+      if (barber.is_active) {
+        showNotice("Disattiva prima il barbiere, poi potrai eliminarlo.", "error");
+        return;
+      }
+      if (!confirm(`Eliminare definitivamente il nome “${barber.name}”?`)) return;
+      deleteButton.disabled = true;
+      try {
+        await api("/functions/v1/admin-bookings", {
+          action: "barber_delete",
+          barber_id: barber.id
+        }, accessToken);
+        await loadBarbers();
+        showNotice("Nome eliminato.", "success");
+      } catch (error) {
+        showNotice(error.message || "Impossibile eliminare il nome.", "error");
+        deleteButton.disabled = false;
+      }
+    };
+    controls.append(deleteButton);
+
+    row.append(name, controls);
     container.append(row);
   }
 }
@@ -212,44 +314,45 @@ async function api(path,body,token=''){
  return data;
 }
 function dateRome(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'Data non valida':d.toLocaleString('it-IT',{timeZone:'Europe/Rome',dateStyle:'full',timeStyle:'short'})}
+function agendaDay(value=Date.now()){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value))}
+function shiftAgendaDay(day,amount){const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+amount);return d.toISOString().slice(0,10)}
+function agendaBounds(day,week){if(!week)return[day,shiftAgendaDay(day,1)];const wd=new Date(day+'T12:00:00Z').getUTCDay();const monday=shiftAgendaDay(day,-((wd+6)%7));return[monday,shiftAgendaDay(monday,7)]}
+function agendaDateLabel(day){return new Date(day+'T12:00:00Z').toLocaleDateString('it-IT',{timeZone:'UTC',weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function agendaTimeLabel(start,end,mode){const a=new Date(start),b=new Date(end);const time={timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false};const from=a.toLocaleTimeString('it-IT',time);const to=Number.isFinite(b.getTime())?b.toLocaleTimeString('it-IT',time):'';return mode==='day'?from+(to?'–'+to:''):a.toLocaleDateString('it-IT',{timeZone:'Europe/Rome',weekday:'short',day:'numeric',month:'short'})+' · '+from+(to?'–'+to:'')}
+function appointmentRange(start,end){if(!start)return '—';const a=new Date(start);if(Number.isNaN(a.getTime()))return 'Data non valida';const day=a.toLocaleDateString('it-IT',{timeZone:'Europe/Rome',weekday:'long',day:'numeric',month:'long',year:'numeric'});const timeOptions={timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false};const from=a.toLocaleTimeString('it-IT',timeOptions);if(!end)return day+' • '+from;const b=new Date(end);if(Number.isNaN(b.getTime()))return day+' • '+from;return day+' • '+from+'–'+b.toLocaleTimeString('it-IT',timeOptions)}
 function line(card,label,value){const p=document.createElement('p');const strong=document.createElement('b');strong.textContent=label+': ';p.append(strong,document.createTextNode(String(value??'—')));card.append(p)}
 function render(){
  const cards=$('cards');cards.replaceChildren();
  const f = $('filter').value;
-
-const today = new Date().toLocaleDateString('sv-SE', {
-  timeZone: 'Europe/Rome'
-});
-
-const visible = bookings.filter(b => {
-  const status = String(b.status || '').toLowerCase();
-
-  if (['cancelled', 'rejected', 'unblocked'].includes(status)) {
-    return false;
-  }
-
-  const bookingDay = new Date(b.starts_at).toLocaleDateString('sv-SE', {
-    timeZone: 'Europe/Rome'
-  });
-
-  if (bookingDay < today) return false;
-
-  return f === 'all' || status === f;
-});
+ const selectedDay=$('agendaDate').value||agendaDay();
+ const mode=$('agendaMode').value;
+ const [from,until]=agendaBounds(selectedDay,mode==='week');
+ $('agendaHeading').textContent=mode==='week'?agendaDateLabel(from)+' – '+agendaDateLabel(shiftAgendaDay(until,-1)):agendaDateLabel(from);
+ const search=$('bookingSearch').value.trim().toLocaleLowerCase('it-IT');
+ const periodBookings=bookings.filter(b=>{
+  if(!Number.isFinite(Date.parse(b.starts_at)))return false;
+  const first=agendaDay(b.starts_at);
+  const end=Date.parse(b.ends_at);
+  const last=Number.isFinite(end)&&end>Date.parse(b.starts_at)?agendaDay(end-1):first;
+  return first<until&&last>=from&&String(b.status||'').toLowerCase()!=='unblocked';
+ });
+ const visible=periodBookings.filter(b=>{
+  const status=String(b.status||'').toLowerCase();
+  const matchesStatus=f==='all'||status===f;
+  const text=[b.customer_name,b.customer_phone,b.service_name].join(' ').toLocaleLowerCase('it-IT');
+  return matchesStatus&&(!search||text.includes(search));
+ }).sort((a,b)=>Date.parse(a.starts_at)-Date.parse(b.starts_at));
  $('stats').replaceChildren();
- for(const [label,count] of [['Totale',bookings.length],['In attesa',bookings.filter(b=>b.status==='pending').length],['Confermate',bookings.filter(b=>b.status==='confirmed').length],['Bloccati',bookings.filter(b=>b.status==='blocked').length]]){
+ for(const [label,count] of [['Totale',periodBookings.length],['In attesa',periodBookings.filter(b=>b.status==='pending').length],['Confermate',periodBookings.filter(b=>b.status==='confirmed').length],['Bloccati',periodBookings.filter(b=>b.status==='blocked').length]]){
   const span=document.createElement('span');span.className='stat';const bold=document.createElement('strong');bold.textContent=String(count);span.append(bold,document.createTextNode(label));$('stats').append(span);
  }
  if(!visible.length){const p=document.createElement('div');p.className='empty';p.textContent='Nessuna prenotazione per questo filtro.';cards.append(p);return}
- // Keep customer appointments together first; blocked time slots are grouped at the end.
- visible.sort((a,b)=>Number(a.status==='blocked')-Number(b.status==='blocked'));
  for(const b of visible){
   const isBlock=b.status==='blocked'||b.customer_name==='BLOCCATO'||b.customer_phone==='ADMIN';
   const card=document.createElement('article');card.className='booking'+(isBlock&&b.status==='blocked'?' booking--blocked':'');
   const head=document.createElement('div');head.className='booking-head';
   const name=document.createElement('strong');name.className='customer-name';name.textContent=isBlock?(b.status==='blocked'?'🔒 Blocco orario':'🔓 Blocco sbloccato'):(b.customer_name||'Cliente');head.append(name);
-  const appointmentDate=document.createElement('span');appointmentDate.className='appointment-date';appointmentDate.textContent=dateRome(b.starts_at);head.append(appointmentDate);card.append(head);
-  if(b.ends_at)line(card,'Fine',dateRome(b.ends_at));
+  const appointmentDate=document.createElement('span');appointmentDate.className='appointment-date';appointmentDate.textContent=agendaTimeLabel(b.starts_at,b.ends_at,mode);head.append(appointmentDate);card.append(head);
   if(isBlock){line(card,'Servizio',b.service_name||'—')}else{const service=document.createElement('p');service.className='service-highlight';service.textContent='✂ '+(b.service_name||'—');card.append(service)}
   if(!isBlock)line(card,'Prezzo',b.price!=null?b.price+' €':'—');
   if(!isBlock)line(card,'Telefono',b.customer_phone||'—');
@@ -486,6 +589,12 @@ $('logout').onclick=async()=>{
  }
 };
 $('refresh').onclick=()=>load();$('filter').onchange=render;
+$('agendaDate').value=agendaDay();
+$('agendaDate').onchange=()=>{if(!$('agendaDate').value)$('agendaDate').value=agendaDay();render()};
+$('agendaMode').onchange=render;$('bookingSearch').oninput=render;
+$('agendaToday').onclick=()=>{$('agendaDate').value=agendaDay();$('agendaMode').value='day';render()};
+$('agendaPrevious').onclick=()=>{$('agendaDate').value=shiftAgendaDay($('agendaDate').value,$('agendaMode').value==='week'?-7:-1);render()};
+$('agendaNext').onclick=()=>{$('agendaDate').value=shiftAgendaDay($('agendaDate').value,$('agendaMode').value==='week'?7:1);render()};
 // Riaprendo l'app dalla Home o da un link, rinnova la sessione quando serve.
 window.addEventListener('pageshow',()=>{if(!accessToken)vertexRestoreSession();});
 document.addEventListener('visibilitychange',()=>{
