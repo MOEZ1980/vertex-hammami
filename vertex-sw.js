@@ -27,7 +27,7 @@ self.addEventListener("push", (event) => {
     tag: data.tag || "vertex-booking",
     renotify: true,
     data: {
-      url: data.url || "/admin.html"
+      url: data.url || "/admin-mobile-v2.html"
     }
   };
 
@@ -40,7 +40,7 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
   const url = new URL(
-    event.notification.data?.url || "/admin.html",
+    event.notification.data?.url || "/admin-mobile-v2.html",
     self.location.origin
   ).href;
 
