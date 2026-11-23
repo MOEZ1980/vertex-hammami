@@ -1,415 +1,340 @@
 
-/* VERTEX HAMMAMI - ROYAL BLACK & GOLD */
+/*
+ VERTEX HAMMAMI
+ ROYAL BLACK & GOLD - CLEAN EDITION
+ Solo design. Prenotazioni intatte.
+*/
+
 :root {
-  --gold: #f2c66e;
-  --muted: #dfd2bc;
-  --ink: #080808;
+  --gold: #f2c975;
+  --gold-light: #ffe5a6;
+  --black: #050505;
+  --panel: #101010;
+  --text: #f8f2e8;
+  --muted: #c9c0b0;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 110px;
+  scroll-padding-top: 105px;
 }
 
 body {
   background: #050505 !important;
-  color: #fff6e6 !important;
+  color: var(--text) !important;
 }
 
+/* HEADER */
+
 header {
-  background: #050505 !important;
-  border-bottom: 1px solid #b88639 !important;
+  background: rgba(3,3,3,.97) !important;
+  border-bottom: 1px solid #a78142 !important;
+  box-shadow: 0 5px 24px #0009 !important;
+  backdrop-filter: blur(14px);
 }
 
 header .nav {
-  background: #050505 !important;
+  background: transparent !important;
+  max-width: 1240px !important;
 }
 
-h1, h2, h3,
-.sectiontitle {
-  color: #f2c66e !important;
+.nav .brand img {
+  max-width: 155px !important;
+  height: auto !important;
 }
 
-.hero {
+.navlinks a {
+  color: #f5e9d5;
+}
+
+.navlinks a:hover {
+  color: var(--gold-light);
+}
+
+/* HOME - FOTO PRINCIPALE */
+
+html body #home.hero,
+html body .hero {
+  position: relative !important;
+  isolation: isolate !important;
+
   background-color: #050505 !important;
-}
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.80) 0%,
+      rgba(0,0,0,.38) 55%,
+      rgba(0,0,0,.20) 100%
+    ),
+    url("vertex-hero-pro.webp?v=20") !important;
 
-.hero h1 {
-  font-family: Georgia, serif !important;
-  color: #f5cb7b !important;
-}
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
 
-.wrap,
-.booking,
-.wizard,
-.wizard-shell {
-  color: #f7e9d0 !important;
-}
+  min-height: 570px !important;
+  height: auto !important;
 
-.booking,
-.wizard,
-.wizard-step,
-.wizard-shell {
-  background-color: #090909 !important;
-}
-
-.booking {
-  border: 1px solid #bc8b43 !important;
-  border-radius: 22px !important;
-  box-shadow: 0 18px 40px #000a !important;
-}
-
-.notice,
-.hint {
-  background-color: #11100e !important;
-  color: #f0dfc2 !important;
-  border-color: #ab8245 !important;
-}
-
-.wizard-topbar,
-.wizard-progress {
-  background-color: transparent !important;
-}
-
-.progress-dot,
-.day-picker,
-.calendar-grid,
-.calendar-head,
-.day-choice,
-.slot,
-.barber-option,
-.wizard-service,
-.summary-row {
-  background-color: #101010 !important;
-  border-color: #80633b !important;
-  color: #f5e8d5 !important;
-}
-
-.progress-dot.current,
-.progress-dot.done,
-.day-choice[aria-pressed="true"],
-.slot[aria-pressed="true"],
-.barber-option[aria-pressed="true"],
-.wizard-service[aria-pressed="true"] {
-  background: linear-gradient(
-    135deg, #ffe3a0, #cb9844
-  ) !important;
-  color: #171007 !important;
-  border-color: #f9d38a !important;
-}
-
-input,
-select,
-textarea {
-  background-color: #141414 !important;
-  color: #ffffff !important;
-  border-color: #9b773e !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline-color: #f2c66e !important;
-}
-
-.booking .btn,
-.nav .btn,
-.hero .btn,
-.vt-book {
-  border-radius: 14px !important;
-}
-
-.highlight {
-  background: #11100d !important;
-  border: 1px solid #b98d4a !important;
-}
-
-.vertex-premium,
-.vt-offer,
-.vt-family,
-.vt-card {
-  color: #f9ead0;
-}
-
-.vt-offer,
-.vt-family {
-  background: #090909 !important;
-  border-color: #c99d53 !important;
-}
-
-.vt-card {
-  background: #0c0c0c !important;
-  border-color: #b18749 !important;
-}
-
-.vt-card img {
-  object-fit: cover;
-  display: block;
-}
-
-.vt-heading,
-.vt-copy h2,
-.vt-family h2 {
-  color: #f6d18a !important;
-  font-family: Georgia, serif !important;
-}
-
-#prenota,
-#bookingWizard,
-#dayPicker {
-  scroll-margin-top: 115px;
-}
-
-@media (max-width: 850px) {
-  .booking {
-    padding: 16px !important;
-  }
-
-  .vertex-premium {
-    margin: 22px auto !important;
-    padding: 0 13px !important;
-  }
-
-  .vt-offer,
-  .vt-family {
-    grid-template-columns: 1fr !important;
-  }
-
-  .vt-copy {
-    padding: 20px 14px !important;
-  }
-
-  .vt-price strong {
-    font-size: 55px !important;
-  }
-
-  .floating {
-    position: static !important;
-    transform: none !important;
-    inset: auto !important;
-    display: table !important;
-    width: max-content !important;
-    max-width: 90% !important;
-    margin: 20px auto !important;
-  }
-}
-
-/* VERTEX HAMMAMI - ROYAL BLACK & GOLD */
-:root {
-  --gold: #f2c66e;
-  --muted: #dfd2bc;
-  --ink: #080808;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 110px;
-}
-
-body {
-  background: #050505 !important;
-  color: #fff6e6 !important;
-}
-
-header {
-  background: #050505 !important;
-  border-bottom: 1px solid #b88639 !important;
-}
-
-header .nav {
-  background: #050505 !important;
-}
-
-h1, h2, h3,
-.sectiontitle {
-  color: #f2c66e !important;
-}
-
-.hero {
-  background-color: #050505 !important;
-}
-
-.hero h1 {
-  font-family: Georgia, serif !important;
-  color: #f5cb7b !important;
-}
-
-.wrap,
-.booking,
-.wizard,
-.wizard-shell {
-  color: #f7e9d0 !important;
-}
-
-.booking,
-.wizard,
-.wizard-step,
-.wizard-shell {
-  background-color: #090909 !important;
-}
-
-.booking {
-  border: 1px solid #bc8b43 !important;
-  border-radius: 22px !important;
-  box-shadow: 0 18px 40px #000a !important;
-}
-
-.notice,
-.hint {
-  background-color: #11100e !important;
-  color: #f0dfc2 !important;
-  border-color: #ab8245 !important;
-}
-
-.wizard-topbar,
-.wizard-progress {
-  background-color: transparent !important;
-}
-
-.progress-dot,
-.day-picker,
-.calendar-grid,
-.calendar-head,
-.day-choice,
-.slot,
-.barber-option,
-.wizard-service,
-.summary-row {
-  background-color: #101010 !important;
-  border-color: #80633b !important;
-  color: #f5e8d5 !important;
-}
-
-.progress-dot.current,
-.progress-dot.done,
-.day-choice[aria-pressed="true"],
-.slot[aria-pressed="true"],
-.barber-option[aria-pressed="true"],
-.wizard-service[aria-pressed="true"] {
-  background: linear-gradient(
-    135deg, #ffe3a0, #cb9844
-  ) !important;
-  color: #171007 !important;
-  border-color: #f9d38a !important;
-}
-
-input,
-select,
-textarea {
-  background-color: #141414 !important;
-  color: #ffffff !important;
-  border-color: #9b773e !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline-color: #f2c66e !important;
-}
-
-.booking .btn,
-.nav .btn,
-.hero .btn,
-.vt-book {
-  border-radius: 14px !important;
-}
-
-.highlight {
-  background: #11100d !important;
-  border: 1px solid #b98d4a !important;
-}
-
-.vertex-premium,
-.vt-offer,
-.vt-family,
-.vt-card {
-  color: #f9ead0;
-}
-
-.vt-offer,
-.vt-family {
-  background: #090909 !important;
-  border-color: #c99d53 !important;
-}
-
-.vt-card {
-  background: #0c0c0c !important;
-  border-color: #b18749 !important;
-}
-
-.vt-card img {
-  object-fit: cover;
-  display: block;
-}
-
-.vt-heading,
-.vt-copy h2,
-.vt-family h2 {
-  color: #f6d18a !important;
-  font-family: Georgia, serif !important;
-}
-
-#prenota,
-#bookingWizard,
-#dayPicker {
-  scroll-margin-top: 115px;
-}
-
-@media (max-width: 850px) {
-  .booking {
-    padding: 16px !important;
-  }
-
-  .vertex-premium {
-    margin: 22px auto !important;
-    padding: 0 13px !important;
-  }
-
-  .vt-offer,
-  .vt-family {
-    grid-template-columns: 1fr !important;
-  }
-
-  .vt-copy {
-    padding: 20px 14px !important;
-  }
-
-  .vt-price strong {
-    font-size: 55px !important;
-  }
-
-  .floating {
-    position: static !important;
-    transform: none !important;
-    inset: auto !important;
-    display: table !important;
-    width: max-content !important;
-    max-width: 90% !important;
-    margin: 20px auto !important;
-  }
-}
-
-/* VERTEX - HERO NERO E ORO */
-body #home.hero,
-body .hero {
-  background: linear-gradient(
-    90deg, rgba(0,0,0,.75), rgba(0,0,0,.2)
-  ), url("vertex-hero-pro.webp") center/cover no-repeat !important;
-  min-height: 500px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+
+  padding: 50px 15px !important;
+  overflow: hidden !important;
 }
 
-body .hero > div {
+/* Elimina sovrapposizioni decorative */
+html body .hero::before,
+html body .hero::after {
+  display: none !important;
+}
+
+/* Nasconde il logo grande duplicato,
+   mantiene il logo nell'header */
+html body .hero > div > img {
+  display: none !important;
+}
+
+html body .hero > div {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  max-width: 950px !important;
+
   margin: 0 auto !important;
   padding: 30px 20px !important;
   text-align: center !important;
-  position: relative !important;
-  z-index: 2 !important;
+  background: transparent !important;
 }
 
-body .hero h1 {
+html body .hero h1 {
   color: #ffdb91 !important;
-  text-shadow: 0 3px 20px #000 !important;
+  font-family: Georgia, serif !important;
+
+  font-size: clamp(
+    52px, 8vw, 95px
+  ) !important;
+
+  line-height: 1.02 !important;
+  letter-spacing: .035em !important;
+
+  text-shadow:
+    0 4px 16px #000,
+    0 8px 35px #000 !important;
+}
+
+html body .hero p,
+html body .hero .eyebrow {
+  color: #fff2dc !important;
+  text-shadow: 0 2px 10px #000;
+}
+
+html body .hero .actions {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+}
+
+/* TITOLI */
+
+h2,
+.sectiontitle,
+.vertex-title,
+.vt-heading {
+  color: var(--gold) !important;
+  font-family: Georgia, serif !important;
+}
+
+h3 {
+  color: #f4d394 !important;
+}
+
+/* PULSANTI */
+
+.btn,
+.vertex-action,
+.vt-book {
+  border-radius: 12px !important;
+}
+
+.navlinks .btn,
+.hero .actions .btn:first-child,
+.vt-book {
+  background: linear-gradient(
+    135deg,
+    #ffe9ac,
+    #d5a552
+  ) !important;
+
+  color: #160f05 !important;
+  font-weight: 800 !important;
+  border: 1px solid #edc678 !important;
+}
+
+/* SEZIONI */
+
+.wrap {
+  max-width: 1200px !important;
+}
+
+.highlight {
+  background: #101010 !important;
+  color: #fff3de !important;
+  border: 1px solid #a9854e !important;
+  border-radius: 18px !important;
+}
+
+.vertex-premium {
+  color: #f9ecd5 !important;
+  margin: 34px auto !important;
+}
+
+.vt-offer,
+.vt-family,
+.vt-card,
+.vertex-card {
+  background: #0c0c0c !important;
+  border-color: #b68b4d !important;
+  color: #f4e6ca !important;
+}
+
+.vt-offer img,
+.vt-card img,
+.vertex-card img,
+.vt-family img {
+  object-fit: cover !important;
+}
+
+/* PRENOTAZIONE */
+
+#prenota,
+#dayPicker,
+#bookingWizard {
+  scroll-margin-top: 120px !important;
+}
+
+.booking,
+.wizard-shell {
+  background: #080808 !important;
+  color: #f8eada !important;
+  border-color: #a9854e !important;
+}
+
+.notice,
+.hint {
+  background: #101010 !important;
+  color: #f0e1cb !important;
+  border-color: #8c6d41 !important;
+}
+
+.wizard-step {
+  color: #f8eada !important;
+}
+
+.day-picker,
+.calendar-head,
+.day-choice,
+.slot,
+.barber-option,
+.wizard-service {
+  border-color: #806440 !important;
+}
+
+/* SELEZIONI */
+
+.day-choice[aria-pressed="true"],
+.slot[aria-pressed="true"],
+.barber-option[aria-pressed="true"],
+.wizard-service[aria-pressed="true"] {
+  background: linear-gradient(
+    135deg,
+    #ffe4a0,
+    #ca9747
+  ) !important;
+  color: #100c05 !important;
+}
+
+/* CAMPI */
+
+input,
+select,
+textarea {
+  background-color: #121212 !important;
+  color: #fff !important;
+  border-color: #977545 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline-color: var(--gold) !important;
+}
+
+/* TELEFONO */
+
+@media (max-width: 850px) {
+
+  html body #home.hero,
+  html body .hero {
+    min-height: 450px !important;
+    padding: 28px 12px !important;
+
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(0,0,0,.47),
+        rgba(0,0,0,.68)
+      ),
+      url("vertex-hero-pro.webp?v=20") !important;
+
+    background-position: center !important;
+  }
+
+  html body .hero > div {
+    padding: 24px 10px !important;
+  }
+
+  html body .hero h1 {
+    font-size: clamp(
+      47px, 12vw, 68px
+    ) !important;
+  }
+
+  .booking {
+    padding: 16px !important;
+  }
+
+  .vertex-premium {
+    padding: 0 13px !important;
+  }
+
+  .vt-offer,
+  .vt-family {
+    grid-template-columns: 1fr !important;
+  }
+
+  .vt-copy {
+    padding: 22px 16px !important;
+  }
+
+  .vt-price strong {
+    font-size: 56px !important;
+  }
+
+  /* WhatsApp senza coprire i prezzi */
+  .floating {
+    position: static !important;
+    inset: auto !important;
+    transform: none !important;
+    display: table !important;
+    width: max-content !important;
+    max-width: 90% !important;
+    margin: 20px auto !important;
+  }
 }
