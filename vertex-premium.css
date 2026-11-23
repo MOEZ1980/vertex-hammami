@@ -370,3 +370,50 @@ textarea:focus {
     padding: 45px 20px !important;
   }
 }
+
+/* VERTEX - NERO E ORO, TESTO LEGGIBILE */
+
+/* Sfondo prenotazioni */
+html body #prenota,
+html body #bookingWizard,
+html body .booking,
+html body .wizard-shell {
+  background-color: #050505 !important;
+  color: #fff4df !important;
+}
+
+/* Pulsanti non selezionati */
+html body .barber-option,
+html body .barber-card,
+html body .wizard-service,
+html body .day-choice,
+html body .slot {
+  background: #101010 !important;
+  color: #f8e8c7 !important;
+  border: 1px solid #bf984e !important;
+}
+
+/* Pulsanti selezionati */
+html body .barber-option[aria-pressed="true"],
+html body .barber-card.selected,
+html body .barber-option.selected,
+html body .wizard-service[aria-pressed="true"],
+html body .day-choice[aria-pressed="true"],
+html body .slot[aria-pressed="true"],
+html body .barber-card[aria-pressed="true"] {
+  background: #f2cf7d !important;
+  color: #000 !important;
+  border: 2px solid #ffe6a4 !important;
+}
+
+/* Testo interno dei pulsanti dorati */
+html body .barber-option[aria-pressed="true"] *,
+html body .barber-card.selected *,
+html body .barber-option.selected *,
+html body .wizard-service[aria-pressed="true"] *,
+html body .day-choice[aria-pressed="true"] *,
+html body .slot[aria-pressed="true"] *,
+html body .barber-card[aria-pressed="true"] * {
+  color: #000 !important;
+  text-shadow: none !important;
+}
